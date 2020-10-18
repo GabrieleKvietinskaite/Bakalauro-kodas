@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'api/competences', views.CompetenceAPIView.as_view(), name='competence-list'),
+    path(r'api/player', views.PlayerAPIView.as_view()),
+    path(r'api/roles', views.RoleAPIView.as_view(), name='role-list'),
 ]

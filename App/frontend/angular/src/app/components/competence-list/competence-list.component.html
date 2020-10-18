@@ -1,0 +1,17 @@
+<ng-select 
+    bindLabel="competence"
+    placeholder="Select competences (max 5). Hover on competence title to see more information."
+    appendTo="body"
+    multiple="true"
+    maxSelectedItems="5"
+    [searchable]="true" 
+    [clearable]="true"
+    [(ngModel)]="selected">
+    <ng-option [value]="competence" *ngFor="let competence of competences">
+        <div title="{{competence.description}}">
+            {{competence.competence}}</div>
+    </ng-option>
+</ng-select>
+<div *ngIf="selected && selected?.length != 0">
+    <button type="button" (click)="saveCompetences()" class="btn btn btn-outline-success btn-lg">SAVE</button>
+</div>
