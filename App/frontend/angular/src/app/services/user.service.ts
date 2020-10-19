@@ -1,13 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { tap, shareReplay } from 'rxjs/operators';
-import * as jwtDecode from 'jwt-decode';
-import * as moment from 'moment';
-import { IJwtPayload } from '../models/IJwtPayload.interface';
  
 @Injectable()
 export class UserService {
-
+  
   private REST_API_SERVICE = "http://localhost:8000/api";
   private AUTH_SERVICE = "http://localhost:8000/auth";
  
@@ -19,7 +16,7 @@ export class UserService {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
     };
   }
-
+/*
   get token(): string {
     return localStorage.getItem('token');
   }
@@ -87,7 +84,7 @@ export class UserService {
     localStorage.setItem('token', authResult.token);
     localStorage.setItem('expires_at', JSON.stringify(expiresAt.valueOf()));
   }
-
+*/
   public getCompetences(){
     return this.httpClient.get(this.REST_API_SERVICE + '/competences');
   }
@@ -99,5 +96,4 @@ export class UserService {
   public getRoles(){
     return this.httpClient.get(this.REST_API_SERVICE + '/roles');
   }
- 
 }

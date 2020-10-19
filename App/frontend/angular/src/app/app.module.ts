@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { CompetenceListComponent } from './components/competence-list/competence-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { UserService } from './services/user.service';
 import { LoginComponent } from './components/login/login.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
@@ -22,10 +22,11 @@ import { RegisterComponent } from './components/register/register.component';
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
+    FormsModule,
     AppRoutingModule,
     HttpClientModule,
     NgSelectModule,
-    FormsModule
   ],
   providers: [UserService],
   bootstrap: [AppComponent]
