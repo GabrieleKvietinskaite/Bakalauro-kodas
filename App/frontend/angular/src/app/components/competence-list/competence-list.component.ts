@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { ICompetence } from '../../models/ICompetence.interface';
 
@@ -14,7 +15,8 @@ export class CompetenceListComponent implements OnInit {
   selected: ICompetence [];
 
   constructor(private userService: UserService,
-              private router: Router) { }
+              private router: Router,
+              private authentcationService: AuthenticationService) { }
 
   ngOnInit(): void {
     this.userService.getCompetences().subscribe((data: any[]) =>{
@@ -24,7 +26,8 @@ export class CompetenceListComponent implements OnInit {
 
   saveCompetences(){
     let userCompetences = this.selected.map(x => x.id).sort((a, b) => a - b).toString();
-    this.userService.saveCompetences(1, userCompetences).subscribe();
+    let playerId = this.authentcationService.getTokenPlayerId();
+    this.userService.saveCompetences(playerId, userCompetences).subscribe();
     this.router.navigate(['roles']);
   }
 }

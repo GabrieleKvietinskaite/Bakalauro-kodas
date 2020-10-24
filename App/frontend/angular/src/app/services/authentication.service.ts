@@ -68,7 +68,7 @@ export class AuthenticationService {
     return !(date.valueOf() > currentDate.valueOf());
   }
 
-  getTokenPlayerId(token: string) {
-    return jwt_decode(token).user_id;
+  getTokenPlayerId() {
+    return jwt_decode(this.tokenValue).user_id;
   }
 }
