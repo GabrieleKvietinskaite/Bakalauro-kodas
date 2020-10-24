@@ -17,12 +17,14 @@ export class RoleListComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
+    this.userService.getRoles().subscribe((data: any[]) =>{
+      this.roles = data;
+    })
   }
 
   saveRoles(){
     let userRoles = this.selected.map(x => x.id).sort((a, b) => a - b).toString();
-    console.log(userRoles);
-    //this.userService.saveRoles(1, userRoles);
+    this.userService.saveRoles(1, userRoles).subscribe();
     //this.router.navigate(['menu']);
   }
 

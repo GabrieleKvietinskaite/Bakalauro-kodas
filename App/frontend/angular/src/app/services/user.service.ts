@@ -26,10 +26,16 @@ export class UserService {
   public saveCompetences(userId: number, competences: string){
     let form = {"competences": competences};
 
-    return this.httpClient.put(this.REST_API_SERVICE + '/player/1', form, this.httpOptions);
+    return this.httpClient.put(this.REST_API_SERVICE + `/player/${userId}`, form, this.httpOptions);
   }
 
-  private handleError(error: HttpResponse<Error>) {
-    return throwError(error);
+  public getRoles(){
+    return this.httpClient.get(this.REST_API_SERVICE + '/roles');
+  }
+
+  public saveRoles(userId: number, roles: string){
+    let form = {"roles": roles};
+
+    return this.httpClient.put(this.REST_API_SERVICE + `/player/${userId}`, form, this.httpOptions);
   }
 }
