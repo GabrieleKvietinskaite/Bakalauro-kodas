@@ -134,9 +134,9 @@ SITE_ID = 1
 
 REST_FRAMEWORK = {
     
-    #'DEFAULT_PERMISSION_CLASSES': (
-    #    'rest_framework.permissions.IsAuthenticated',
-    #),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
@@ -151,3 +151,8 @@ REST_AUTH_SERIALIZERS = {
 AUTH_USER_MODEL = 'app.Player'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+JWT_AUTH = {
+    # Authorization:Token xxx
+    'JWT_AUTH_HEADER_PREFIX': 'Token',
+}
