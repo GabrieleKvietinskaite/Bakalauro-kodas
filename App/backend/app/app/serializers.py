@@ -9,26 +9,21 @@ class CompetenceSerializer(serializers.ModelSerializer):
         fields = ('id', 'competence', 'description')
 
 class PlayerSerializer(UserDetailsSerializer):
-    competences = serializers.CharField(source = "player.competences")
-    roles = serializers.CharField(source = "player.roles")
-
-    class Meta(UserDetailsSerializer.Meta):
-        fields = UserDetailsSerializer.Meta.fields + ('competences', 'roles',)
-
-    def update(self, instance, validated_data):
-        player_data = validated_data.pop('player', {})
-        competences = player_data.get('competences')
-        roles = player_data.get('roles')
-
-        instance = super(UserSerializer, self).update(instance, validated_data)
-
-        # get and update pplayer profile
-        profile = instance.player
-        if player_data and competences and roles:
-            profile.competences = competences
-            profile.roles = roles
-            profile.save()
-        return instance
+    class Meta:
+        model = Player
+        fields = ('id', 'competences', 'roles',)
+        extra_kwargs = {
+                'competences': {
+                    # Tell DRF that the link field is not required.
+                    'required': False,
+                    'allow_blank': True,
+                 },
+                 'roles': {
+                    # Tell DRF that the link field is not required.
+                    'required': False,
+                    'allow_blank': True,
+                 }
+            }
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:

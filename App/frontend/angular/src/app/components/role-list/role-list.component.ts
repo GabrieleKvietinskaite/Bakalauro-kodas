@@ -17,9 +17,6 @@ export class RoleListComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit(): void {
-    this.userService.getRoles().subscribe((data: any[]) =>{
-      this.roles = data;
-    })
   }
 
   saveRoles(){

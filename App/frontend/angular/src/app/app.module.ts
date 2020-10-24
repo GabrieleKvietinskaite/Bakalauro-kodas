@@ -28,7 +28,7 @@ import { RegisterComponent } from './components/register/register.component';
     HttpClientModule,
     NgSelectModule,
   ],
-  providers: [UserService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -24,8 +24,7 @@ export class CompetenceListComponent implements OnInit {
 
   saveCompetences(){
     let userCompetences = this.selected.map(x => x.id).sort((a, b) => a - b).toString();
-    console.log(userCompetences);
-    //this.userService.saveCompetences(1, userCompetences);
+    this.userService.saveCompetences(1, userCompetences).subscribe();
     this.router.navigate(['roles']);
   }
 }
