@@ -1,8 +1,8 @@
 from rest_framework import generics
-from .models import Competence, Player, Role, Scenario
-from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer
+from .models import Competence, Player, Role, Scenario, Question
+from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer
 
-class CompetenceAPIView(generics.ListCreateAPIView):
+class CompetenceListAPIView(generics.ListCreateAPIView):
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
 
@@ -14,10 +14,18 @@ class PlayerAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
 
-class RoleAPIView(generics.ListCreateAPIView):
+class RoleListAPIView(generics.ListCreateAPIView):
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
 
-class ScenarioAPIView(generics.ListCreateAPIView):
+class ScenarioListAPIView(generics.ListCreateAPIView):
     queryset = Scenario.objects.all()
     serializer_class = ScenarioSerializer
+
+class QuestionListAPIView(generics.ListCreateAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
+
+class QuestionAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer

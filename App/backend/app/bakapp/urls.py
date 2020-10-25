@@ -21,14 +21,16 @@ from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'api/competences', views.CompetenceAPIView.as_view(), name='competence-list'),
+    path(r'api/competences', views.CompetenceListAPIView.as_view(), name='competence-list'),
     path(r'api/player', views.PlayerListAPIView.as_view()),
-    path(r'api/roles', views.RoleAPIView.as_view(), name='role-list'),
+    path(r'api/roles', views.RoleListAPIView.as_view(), name='role-list'),
     path(r'auth/', include('rest_auth.urls')),
     path(r'auth/registration/', include('rest_auth.registration.urls')),
     path(r'auth/token/', obtain_jwt_token),
     path(r'auth/token-refresh/', refresh_jwt_token),
     path(r'auth/token-verify/', verify_jwt_token),
     url(r'api/player/(?P<pk>[0-9]+)$', views.PlayerAPIView.as_view()),
-    path(r'api/scenario', views.ScenarioAPIView.as_view(), name='scenario-list'),
+    path(r'api/scenario', views.ScenarioListAPIView.as_view(), name='scenario-list'),
+    path(r'api/question', views.QuestionListAPIView.as_view(), name='question-list'),
+    url(r'api/question/(?P<pk>[0-9]+)$', views.QuestionAPIView.as_view()),
 ]

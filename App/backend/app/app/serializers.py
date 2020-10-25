@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Competence, Player, Role, Scenario
+from .models import Competence, Player, Role, Scenario, Question
 from rest_auth.serializers import UserDetailsSerializer
 
 class CompetenceSerializer(serializers.ModelSerializer):
@@ -13,17 +13,17 @@ class PlayerSerializer(UserDetailsSerializer):
         model = Player
         fields = ('id', 'competences', 'roles',)
         extra_kwargs = {
-                'competences': {
-                    # Tell DRF that the link field is not required.
-                    'required': False,
-                    'allow_blank': True,
-                 },
-                 'roles': {
-                    # Tell DRF that the link field is not required.
-                    'required': False,
-                    'allow_blank': True,
-                 }
+            'competences': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            },
+            'roles': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
             }
+        }
 
 class RoleSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,3 +34,17 @@ class ScenarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scenario
         fields = ('id', 'title', 'description')
+
+class QuestionSerializer(serializers.ModelSerializer):
+    scenario_id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Question
+        fields = ('id', 'scenario_id', 'question', 'win', 'quantity', 'average')
+        extra_kwargs = {
+            'question': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            }
+        }

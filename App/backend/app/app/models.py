@@ -28,3 +28,13 @@ class Scenario(models.Model):
 
     def __str__(self):
         return self.title
+
+class Question(models.Model):
+    scenario = models.ForeignKey(Scenario, related_name='questions', on_delete=models.CASCADE)
+    question = models.CharField(max_length = 500)
+    win = models.BooleanField(null=True)
+    quantity = models.IntegerField()
+    average = models.DecimalField(max_digits=12, decimal_places=2)
+
+    def __str__(self):
+        return self.title
