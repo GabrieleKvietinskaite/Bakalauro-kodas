@@ -12,6 +12,7 @@ import { RoleListComponent } from './components/role-list/role-list.component';
 import { RegisterComponent } from './components/register/register.component';
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { ScenarioComponent } from './components/scenario/scenario.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ErrorInterceptor } from './interceptors/error.interceptor';
     CompetenceListComponent,
     LoginComponent,
     RoleListComponent,
-    RegisterComponent
+    RegisterComponent,
+    ScenarioComponent
   ],
   imports: [
     BrowserModule,

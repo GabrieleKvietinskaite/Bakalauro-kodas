@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Competence, Player, Role
+from .models import Competence, Player, Role, Scenario
 from rest_auth.serializers import UserDetailsSerializer
 
 class CompetenceSerializer(serializers.ModelSerializer):
@@ -29,3 +29,8 @@ class RoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Role
         fields = ('id', 'role', 'description')
+
+class ScenarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Scenario
+        fields = ('id', 'title', 'description')

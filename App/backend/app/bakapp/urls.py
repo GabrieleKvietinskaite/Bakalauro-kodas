@@ -30,4 +30,5 @@ urlpatterns = [
     path(r'auth/token-refresh/', refresh_jwt_token),
     path(r'auth/token-verify/', verify_jwt_token),
     url(r'api/player/(?P<pk>[0-9]+)$', views.PlayerAPIView.as_view()),
+    path(r'api/scenario', views.ScenarioAPIView.as_view(), name='scenario-list'),
 ]
