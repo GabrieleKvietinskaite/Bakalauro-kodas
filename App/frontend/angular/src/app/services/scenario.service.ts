@@ -19,7 +19,7 @@ export class ScenarioService {
     }
 
     getScenarios() {
-      return this.httpClient.get(this.REST_API_SERVICE + '/scenario');
+      return this.httpClient.get(this.REST_API_SERVICE + '/scenarios');
     }
 
     private handleError(error: HttpResponse<Error>) {
