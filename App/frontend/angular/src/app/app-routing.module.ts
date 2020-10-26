@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CompetenceListComponent } from './components/competence-list/competence-list.component';
+import { GameComponent } from './components/game/game.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
@@ -11,7 +12,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'competences', component: CompetenceListComponent },
   { path: 'roles', component: RoleListComponent },
-  { path: 'scenarios', component: ScenarioComponent }
+  { path: 'scenarios', component: ScenarioComponent },
+  { path: 'game', component:GameComponent }
 
 ];
 

@@ -1,0 +1,10 @@
+<div *ngIf="question">
+  <h4>{{ question.question }}</h4>
+  <div *ngFor="let answer of answers">
+    <button type="button" (click)="updateData(answer)"
+      class="btn btn-outline-success btn-sm btn-block mt-3">{{ answer.answer }}</button>
+  </div>
+  <div *ngIf="answers?.length == 0">
+    <button type="button" (click)="finishGame()" class="btn btn btn-outline-warning btn-lg btn-block">Results</button>
+  </div>
+</div>

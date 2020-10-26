@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { NavigationExtras, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { IScenario } from 'src/app/models/IScenario.interface';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { GameService } from 'src/app/services/game.service';
 import { ScenarioService } from 'src/app/services/scenario.service';
 
 @Component({
@@ -11,14 +14,14 @@ import { ScenarioService } from 'src/app/services/scenario.service';
 export class ScenarioComponent implements OnInit {
   scenarios: IScenario[];
   error: string;
-  token: string;
+  playerId: string;
 
   constructor(private scenarioService: ScenarioService,
-      //private gameService: GameService,
-      //private authenticationService: AuthenticationService,
-      //private router: Router,
+      private gameService: GameService,
+      private authenticationService: AuthenticationService,
+      private router: Router,
   ) {
-      //this.authenticationService.token.subscribe(x => this.token = x);
+    this.playerId = this.authenticationService.getTokenPlayerId();
   }
   scenariosData: Observable<any>;
 
@@ -29,23 +32,23 @@ export class ScenarioComponent implements OnInit {
   loadData() {
     this.scenarioService.getScenarios().subscribe((data: IScenario[]) =>{
       this.scenarios = data;
-      console.log(this.scenarios[0].title)
     })
   }
-  /*
+  
   openGame(scenarioId: number) {
-      var gameId;
-      var service = this.gameService.createGame(this.authenticationService.getTokenId(this.token), scenarioId);
+    /*  
+    var gameId;
+      var service = this.gameService.createGame(this.playerId, scenarioId);
 
       service.subscribe(
           _gameId => {
               gameId = _gameId;
           },
           error => this.error = <any>error,
-          () => {
-              const navigationExtras: NavigationExtras = { state: { Id: scenarioId, GameId: gameId } };
-              this.router.navigate(['game'], navigationExtras);
+          () => {*/
+              const navigationExtras: NavigationExtras = { state: { Id: scenarioId, GameId: 1 } };
+              this.router.navigate(['game'], navigationExtras);/*
           }
-      )
-  }*/
+      )*/
+  }
 }

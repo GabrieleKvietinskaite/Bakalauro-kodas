@@ -37,4 +37,16 @@ class Question(models.Model):
     average = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self):
-        return self.title
+        return self.question
+
+class Answer(models.Model):
+    scenario = models.ForeignKey(Scenario, related_name='answers', on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name='answers', on_delete=models.CASCADE)
+    number = models.IntegerField()
+    answer = models.CharField(max_length = 500)
+    next_question = models.ForeignKey(Question, related_name='next_answers', on_delete=models.CASCADE)
+    weight = models.IntegerField()
+    quantity = models.IntegerField()
+
+    def __str__(self):
+        return self.answer
