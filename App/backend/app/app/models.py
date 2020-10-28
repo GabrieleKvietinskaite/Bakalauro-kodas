@@ -35,6 +35,7 @@ class Question(models.Model):
     win = models.BooleanField(null=True)
     quantity = models.IntegerField()
     average = models.DecimalField(max_digits=12, decimal_places=2)
+    p_question = models.DecimalField(max_digits=3, decimal_places=2)
 
     def __str__(self):
         return self.question
@@ -47,6 +48,8 @@ class Answer(models.Model):
     next_question = models.ForeignKey(Question, related_name='next_answers', on_delete=models.CASCADE)
     weight = models.IntegerField()
     quantity = models.IntegerField()
+    p_answer = models.DecimalField(max_digits=3, decimal_places=2)
+    p_question_answer = models.DecimalField(max_digits=3, decimal_places=2)
 
     def __str__(self):
         return self.answer

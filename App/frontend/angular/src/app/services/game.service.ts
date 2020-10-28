@@ -25,9 +25,9 @@ export class GameService {
         return this.httpClient.post(this.REST_API_SERVICE + url, form);
     }
 
-    updateGame(gameId: number, questions: string, points: string, maximumPoints: string){
+    updateGame(gameId: number, questions: string, points: string, maximumPoints: string, hypothesis: string){
         let url = `/game/${gameId}`;
-        let form = {"questions": questions, "received_points": points, "maximum_points": maximumPoints};
+        let form = {"questions": questions, "received_points": points, "maximum_points": maximumPoints, "hypothesis": hypothesis};
 
         return this.httpClient.put(this.REST_API_SERVICE + url, form, this.httpOptions);
     }

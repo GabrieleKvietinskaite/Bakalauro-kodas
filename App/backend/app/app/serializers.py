@@ -40,7 +40,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ('id', 'scenario_id', 'question', 'win', 'quantity', 'average')
+        fields = ('id', 'scenario_id', 'question', 'win', 'quantity', 'average', 'p_question')
         extra_kwargs = {
             'question': {
                 # Tell DRF that the link field is not required.
@@ -56,7 +56,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('id', 'scenario_id', 'question_id', 'number', 'answer', 'next_question_id', 'weight', 'quantity')
+        fields = ('id', 'scenario_id', 'question_id', 'number', 'answer', 'next_question_id', 'weight', 'quantity', 'p_answer', 'p_question_answer')
         extra_kwargs = {
             'number': {
                 # Tell DRF that the link field is not required.

@@ -7,4 +7,5 @@ export interface IQuestion {
     win: Nullable<boolean>;
     quantity: number;
     average: number;
+    p_question: number;
 }

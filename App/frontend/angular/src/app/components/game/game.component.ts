@@ -25,7 +25,7 @@ export class GameComponent implements OnInit {
         questions: "",
         received_points: "",
         maximum_points: "",
-        hypothesis: null
+        hypothesis: ""
     };
 
     constructor(private questionService: QuestionService,
@@ -98,13 +98,16 @@ export class GameComponent implements OnInit {
         let points;
         let maximumPoints;
         let maxPoints = this.findMaxPoints();
+        let hyp;
+        let h = this.calculate(answer.p_question_answer, answer.p_answer);
 
         this.gameService.getGame(this.gameId).subscribe(
             data => {
                 console.log(data.questions);
                 this.game.questions = data.questions,
                 this.game.received_points = data.received_points,
-                this.game.maximum_points = data.maximum_points
+                this.game.maximum_points = data.maximum_points,
+                this.game.hypothesis = data.hypothesis
             },
             error => this.error = <any>error,
             () => {
@@ -112,13 +115,15 @@ export class GameComponent implements OnInit {
                     questions = this.game.questions += ';' + this.question.id;
                     points = this.game.received_points += ';' + answer.weight;
                     maximumPoints = this.game.maximum_points += ';' + maxPoints;
+                    hyp = this.game.hypothesis += ';' + h;
                 }
                 else {
                     questions =  this.question.id;
                     points = answer.weight;
                     maximumPoints = maxPoints;
+                    hyp = h;
                 }
-                this.gameService.updateGame(this.gameId, questions, points, maximumPoints).subscribe(
+                this.gameService.updateGame(this.gameId, questions, points, maximumPoints, hyp).subscribe(
                     error => this.error = <any>error
                 )
                 this.answers = [];
@@ -127,6 +132,10 @@ export class GameComponent implements OnInit {
         );
     }
 
+    calculate(p_q_a: number, p_a: number){
+        return Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100) / 100;
+    }
+    
     findMaxPoints(){
         var max = 0;
 
