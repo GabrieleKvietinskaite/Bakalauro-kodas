@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Competence, Player, Role, Scenario, Question, Answer
+from .models import Competence, Player, Role, Scenario, Question, Answer, Game
 from rest_auth.serializers import UserDetailsSerializer
 
 class CompetenceSerializer(serializers.ModelSerializer):
@@ -70,5 +70,42 @@ class AnswerSerializer(serializers.ModelSerializer):
             'weight': {
                 # Tell DRF that the link field is not required.
                 'required': False,
+            }
+        }
+
+class GameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = ('id', 'player_id', 'scenario_id', 'questions', 'received_points', 'maximum_points', 'hypothesis', 'started_at', 'finished_at')
+        extra_kwargs = {
+            'questions': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            },
+            'received_points': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            },
+            'maximum_points': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            },
+            'hypothesis': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            },
+            'started_at': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_null': True,
+            },
+            'finished_at': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_null': True,
             }
         }

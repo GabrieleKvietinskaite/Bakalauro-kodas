@@ -42,9 +42,8 @@ urlpatterns = [
     # ANSWER
     url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)/answer/(?P<answer>[0-9]+)$', views.AnswerAPIView.as_view(), name='answers-list'),
     url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)/answers$', views.AnswerListAPIView.as_view()),
-    
-    
-   
-    
-    
+    # GAME
+    path(r'api/games', views.GameListAPIView.as_view(), name='games-list'),
+    url(r'api/game/create/player/(?P<player>[0-9]+)/scenario/(?P<scenario>[0-9]+)$', views.CreateGameAPIView.as_view()),
+    url(r'api/game/(?P<pk>[0-9]+)$', views.GameAPIView.as_view()),
 ]

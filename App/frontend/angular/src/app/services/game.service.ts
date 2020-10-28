@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
+import { IGame } from '../models/IGame.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,32 +17,26 @@ export class GameService {
       headers: new HttpHeaders({'Content-Type': 'application/json'})
     };
   }
-/*
-    createGame(userId: number, scenarioId: number) {
-        var url = `api/game`;
-        var game: IGame = {
-            GameId: null,
-            UserId: userId,
-            ScenarioId: scenarioId,
-            Questions: null,
-            ReceivedPoints: null,
-            MaxPoints: null,
-            StartedAt: null,
-            FinishedAt: null
-        };
 
-        return this.http.post(url, game, options)
-            .pipe(map(response => response),
-                catchError(this.handleError));
-    }*/
-/*
-    updateGame(gameId: number, questionId: number, receivedPoints: number, maxPoints: number){
-        var url = `api/game/${gameId}/edit`;
+    createGame(playerId: number, scenarioId: number) {
+        let url = `/game/create/player/${playerId}/scenario/${scenarioId}`;
+        let form = {"player_id": playerId, "scenario_id": scenarioId}
 
-        return this.http.post(url, {questionId, receivedPoints, maxPoints}, options)
-            .pipe(map(response => response),
-                catchError(this.handleError));
-    }*/
+        return this.httpClient.post(this.REST_API_SERVICE + url, form);
+    }
+
+    updateGame(gameId: number, questions: string, points: string, maximumPoints: string){
+        let url = `/game/${gameId}`;
+        let form = {"questions": questions, "received_points": points, "maximum_points": maximumPoints};
+
+        return this.httpClient.put(this.REST_API_SERVICE + url, form, this.httpOptions);
+    }
+
+    getGame(gameId: number){
+        let url = `/game/${gameId}`;
+
+        return this.httpClient.get<IGame>(this.REST_API_SERVICE + url);
+    }
 /*
     finishGame(gameId: number){
         var url = `api/game/${gameId}/finish`;
@@ -66,8 +61,4 @@ export class GameService {
             .pipe(map(response => response),
                 catchError(this.handleError));
     }*/
-
-    private handleError(error: HttpResponse<Error>) {
-        return throwError(error);
-    }
 }

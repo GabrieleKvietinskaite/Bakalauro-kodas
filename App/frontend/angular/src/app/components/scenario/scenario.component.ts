@@ -14,7 +14,7 @@ import { ScenarioService } from 'src/app/services/scenario.service';
 export class ScenarioComponent implements OnInit {
   scenarios: IScenario[];
   error: string;
-  playerId: string;
+  playerId: number;
 
   constructor(private scenarioService: ScenarioService,
       private gameService: GameService,
@@ -35,8 +35,7 @@ export class ScenarioComponent implements OnInit {
     })
   }
   
-  openGame(scenarioId: number) {
-    /*  
+  openGame(scenarioId: number) { 
     var gameId;
       var service = this.gameService.createGame(this.playerId, scenarioId);
 
@@ -45,10 +44,10 @@ export class ScenarioComponent implements OnInit {
               gameId = _gameId;
           },
           error => this.error = <any>error,
-          () => {*/
-              const navigationExtras: NavigationExtras = { state: { Id: scenarioId, GameId: 1 } };
-              this.router.navigate(['game'], navigationExtras);/*
+          () => {
+              const navigationExtras: NavigationExtras = { state: { Id: scenarioId, GameId: gameId } };
+              this.router.navigate(['game'], navigationExtras);
           }
-      )*/
+      )
   }
 }

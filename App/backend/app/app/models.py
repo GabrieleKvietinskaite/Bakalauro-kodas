@@ -50,3 +50,17 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.answer
+
+class Game(models.Model):
+    player = models.ForeignKey(Player, related_name='games', on_delete=models.CASCADE)
+    scenario = models.ForeignKey(Scenario, related_name='games', on_delete=models.CASCADE)
+    questions = models.CharField(max_length = 100)
+    received_points = models.CharField(max_length = 100)
+    maximum_points = models.CharField(max_length = 100)
+    hypothesis = models.CharField(max_length = 100)
+    started_at = models.DateTimeField(auto_now_add=True)
+    finished_at = models.DateTimeField(null=True)
+
+    def __str__(self):
+        return self.questions
+    

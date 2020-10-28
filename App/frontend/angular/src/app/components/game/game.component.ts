@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { IAnswer } from 'src/app/models/ianswer';
+import { IGame } from 'src/app/models/IGame.interface';
 import { IQuestion } from 'src/app/models/iquestion';
 import { AnswerService } from 'src/app/services/answer.service';
 import { GameService } from 'src/app/services/game.service';
@@ -17,6 +18,15 @@ export class GameComponent implements OnInit {
     error: string;
     scenarioId: number;
     gameId: number;
+    private game: IGame={
+        id: null,
+        player_id: null,
+        scenario_id: null,
+        questions: "",
+        received_points: "",
+        maximum_points: "",
+        hypothesis: null
+    };
 
     constructor(private questionService: QuestionService,
         private answerService: AnswerService,
@@ -27,7 +37,7 @@ export class GameComponent implements OnInit {
             if(state === undefined){
                 this.router.navigate(['scenarios']);
             }
-            this.scenarioId = 1;//state.Id;
+            this.scenarioId = state.Id;
             this.gameId = state.GameId;
             this.loadQuestion(1);
         }
@@ -84,15 +94,37 @@ export class GameComponent implements OnInit {
     }
 
     updateData(answer: IAnswer){
-        /*
-        this.questionService.updateQuestion(this.scenarioId, this.question.Id, answer.number).subscribe(
-            error => this.error = <any>error
-        )
-        this.gameService.updateGame(this.gameId, this.question.Id, answer.Weight, this.findMaxPoints()).subscribe(
-            error => this.error = <any>error
-        )*/
-        this.answers = [];
-        this.loadQuestion(answer.next_question_id);
+        let questions;
+        let points;
+        let maximumPoints;
+        let maxPoints = this.findMaxPoints();
+
+        this.gameService.getGame(this.gameId).subscribe(
+            data => {
+                console.log(data.questions);
+                this.game.questions = data.questions,
+                this.game.received_points = data.received_points,
+                this.game.maximum_points = data.maximum_points
+            },
+            error => this.error = <any>error,
+            () => {
+                if(this.game.questions != ""){
+                    questions = this.game.questions += ';' + this.question.id;
+                    points = this.game.received_points += ';' + answer.weight;
+                    maximumPoints = this.game.maximum_points += ';' + maxPoints;
+                }
+                else {
+                    questions =  this.question.id;
+                    points = answer.weight;
+                    maximumPoints = maxPoints;
+                }
+                this.gameService.updateGame(this.gameId, questions, points, maximumPoints).subscribe(
+                    error => this.error = <any>error
+                )
+                this.answers = [];
+                this.loadQuestion(answer.next_question_id);
+            }
+        );
     }
 
     findMaxPoints(){

@@ -1,6 +1,7 @@
-from rest_framework import generics
-from .models import Competence, Player, Role, Scenario, Question, Answer
-from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer
+from rest_framework import generics, status
+from rest_framework.response import Response
+from .models import Competence, Player, Role, Scenario, Question, Answer, Game
+from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
 
 class CompetenceListAPIView(generics.ListCreateAPIView):
     queryset = Competence.objects.all()
@@ -56,3 +57,22 @@ class AnswerAPIView(generics.RetrieveUpdateDestroyAPIView):
         answer = self.kwargs.get('answer')
         
         return Answer.objects.get(scenario_id=scenario, question_id=question, number=answer)
+
+class GameListAPIView(generics.ListCreateAPIView):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+
+class CreateGameAPIView(generics.CreateAPIView):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+
+    def create(self, request, *args, **kwargs):
+        player = kwargs.get('player')
+        scenario = kwargs.get('scenario')
+        data = Game.objects.create(player_id=player, scenario_id=scenario)
+
+        return Response(data.id, status=status.HTTP_200_OK)
+
+class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
