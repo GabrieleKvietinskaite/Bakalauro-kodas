@@ -37,22 +37,19 @@ export class GameService {
 
         return this.httpClient.get<IGame>(this.REST_API_SERVICE + url);
     }
-/*
+
     finishGame(gameId: number){
-        var url = `api/game/${gameId}/finish`;
+        let url = `/game/${gameId}`;
+        let form = {"finished_at": new Date()};
 
-        return this.http.post(url, null, options)
-            .pipe(map(response => response),
-                catchError(this.handleError));
-    }*/
-    /*
+        return this.httpClient.put(this.REST_API_SERVICE + url, form, this.httpOptions);
+    }
+    
     getResults(gameId: number){
-        var url = `api/game/${gameId}/results`;
+        var url = `/game/${gameId}`;
 
-        return this.http.get<IResults>(url, options)
-            .pipe(map(response => response),
-                catchError(this.handleError));
-    }*/
+        return this.httpClient.get<IGame>(this.REST_API_SERVICE + url);
+    }
 /*
     getStatistics(){
         var url = `api/statistics`;

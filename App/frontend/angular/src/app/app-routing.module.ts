@@ -4,6 +4,7 @@ import { CompetenceListComponent } from './components/competence-list/competence
 import { GameComponent } from './components/game/game.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { ResultComponent } from './components/result/result.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
 import { ScenarioComponent } from './components/scenario/scenario.component';
 
@@ -13,7 +14,8 @@ const routes: Routes = [
   { path: 'competences', component: CompetenceListComponent },
   { path: 'roles', component: RoleListComponent },
   { path: 'scenarios', component: ScenarioComponent },
-  { path: 'game', component:GameComponent }
+  { path: 'game', component:GameComponent },
+  { path: 'result', component:ResultComponent }
 
 ];
 

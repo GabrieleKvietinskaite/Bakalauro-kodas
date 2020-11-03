@@ -148,15 +148,14 @@ export class GameComponent implements OnInit {
         return max;
     }
     
-    finishGame() {
-        /*
+    finishGame() { 
         this.gameService.finishGame(this.gameId).subscribe(
             _ => {},
             error => this.error = <any>error,
-            () => {*/
+            () => {
                 const navigationExtras: NavigationExtras = { state: { GameId: this.gameId, ScenarioId: this.scenarioId } };
-                this.router.navigate(['results'], navigationExtras);
-            /*}
-        )*/
+                this.router.navigate(['result'], navigationExtras);
+            }
+        )
     }
 }

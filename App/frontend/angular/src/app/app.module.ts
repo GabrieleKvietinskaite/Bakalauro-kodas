@@ -14,6 +14,8 @@ import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { ScenarioComponent } from './components/scenario/scenario.component';
 import { GameComponent } from './components/game/game.component';
+import { ResultComponent } from './components/result/result.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import { GameComponent } from './components/game/game.component';
     RoleListComponent,
     RegisterComponent,
     ScenarioComponent,
-    GameComponent
+    GameComponent,
+    ResultComponent
   ],
   imports: [
     BrowserModule,
@@ -32,6 +35,7 @@ import { GameComponent } from './components/game/game.component';
     AppRoutingModule,
     HttpClientModule,
     NgSelectModule,
+    NgApexchartsModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
