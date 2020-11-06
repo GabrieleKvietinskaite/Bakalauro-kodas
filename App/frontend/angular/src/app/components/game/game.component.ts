@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
+import { CountdownComponent } from 'ngx-countdown/countdown.component';
 import { IAnswer } from 'src/app/models/ianswer';
 import { IGame } from 'src/app/models/IGame.interface';
 import { IQuestion } from 'src/app/models/iquestion';
@@ -12,6 +13,7 @@ import { QuestionService } from 'src/app/services/question.service';
     templateUrl: './game.component.html',
     styleUrls: ['./game.component.css']
 })
+
 export class GameComponent implements OnInit {
     question: IQuestion;
     answers: IAnswer[] = null;
@@ -27,6 +29,7 @@ export class GameComponent implements OnInit {
         maximum_points: "",
         hypothesis: ""
     };
+    @ViewChild('countdown', { static: false }) private counter: CountdownComponent;
 
     constructor(private questionService: QuestionService,
         private answerService: AnswerService,
@@ -45,33 +48,21 @@ export class GameComponent implements OnInit {
     ngOnInit() {
     }
 
+    ngAfterViewInit() {
+        this.counter.restart();
+    }
+
     loadQuestion(questionId: number){
         this.questionService.getQuestion(this.scenarioId, questionId).subscribe((data: IQuestion) =>{
             this.question = data;
             this.loadAnswers(questionId)
         })
-        /*
-        this.questionService.getQuestion(this.scenarioId, questionId).subscribe(
-            question => {
-                this.question = question;
-            },
-            error => this.error = <any>error,
-            () => this.loadAnswers(questionId)
-        )*/
     }
 
     loadAnswers(questionId: number){
     this.answerService.getAnswers(this.scenarioId, questionId).subscribe((data: IAnswer[]) =>{
             this.answers = this.shuffle(data);
     })
-        /*
-        this.answerService.getAnswers(this.scenarioId, questionId).subscribe(
-            answers => {
-                this.allAnswers = answers;
-            },
-            error => this.error = <any>error,
-            () => this.filterAnswers()
-        ) */
     }
 
     shuffle(array) {
@@ -103,7 +94,6 @@ export class GameComponent implements OnInit {
 
         this.gameService.getGame(this.gameId).subscribe(
             data => {
-                console.log(data.questions);
                 this.game.questions = data.questions,
                 this.game.received_points = data.received_points,
                 this.game.maximum_points = data.maximum_points,
@@ -133,7 +123,13 @@ export class GameComponent implements OnInit {
     }
 
     calculate(p_q_a: number, p_a: number){
-        return Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100) / 100;
+        let x = Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100000) / 100000;
+        //let x =((p_q_a * p_a) / this.question.p_question);
+        console.log(p_q_a);
+        console.log(p_a);
+        console.log(this.question.p_question);
+        console.log(x);
+        return x;
     }
     
     findMaxPoints(){
@@ -157,5 +153,47 @@ export class GameComponent implements OnInit {
                 this.router.navigate(['result'], navigationExtras);
             }
         )
+    }
+
+    gameOver() {
+        let questions;
+        let points;
+        let maximumPoints;
+        let maxPoints = this.findMaxPoints();
+        let hyp;
+
+        this.gameService.getGame(this.gameId).subscribe(
+            data => {
+                this.game.questions = data.questions,
+                this.game.received_points = data.received_points,
+                this.game.maximum_points = data.maximum_points,
+                this.game.hypothesis = data.hypothesis
+            },
+            error => this.error = <any>error,
+            () => {
+                if(this.game.questions != ""){
+                    questions = this.game.questions += ';' + this.question.id;
+                    points = this.game.received_points += ';-1';
+                    maximumPoints = this.game.maximum_points += ';' + maxPoints;
+                    hyp = this.game.hypothesis += ';0';
+                }
+                else {
+                    questions =  this.question.id;
+                    points = -1;
+                    maximumPoints = maxPoints;
+                    hyp = 0;
+                }
+                this.gameService.updateGame(this.gameId, questions, points, maximumPoints, hyp).subscribe(
+                    error => this.error = <any>error
+                )
+                this.finishGame();
+            }
+        );
+    }
+
+    onTimerFinished(e:Event){
+        if (e["action"] == "done"){
+            this.gameOver();
+        }
     }
 }

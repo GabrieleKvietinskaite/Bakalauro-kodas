@@ -1,4 +1,5 @@
 <div *ngIf="question">
+  <countdown *ngIf="answers?.length != 0" #countdown [config]="{leftTime: 5}" (event)="onTimerFinished($event)"></countdown>
   <h4>{{ question.question }}</h4>
   <div *ngFor="let answer of answers">
     <button type="button" (click)="updateData(answer)"

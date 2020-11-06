@@ -16,6 +16,8 @@ import { ScenarioComponent } from './components/scenario/scenario.component';
 import { GameComponent } from './components/game/game.component';
 import { ResultComponent } from './components/result/result.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { CountdownModule } from 'ngx-countdown';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     AppRoutingModule,
     HttpClientModule,
     NgSelectModule,
-    NgApexchartsModule
+    NgApexchartsModule,
+    CountdownModule 
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

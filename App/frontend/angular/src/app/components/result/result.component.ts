@@ -61,18 +61,20 @@ export class ResultComponent implements AfterViewInit{
   }
 
   getResults(gameId: number){
+    let receivedPoints;
+    let maxPoints;
+    let categories;
+
     this.gameService.getResults(this.gameId).subscribe(
         results => {
-          var receivedPoints = results.received_points.split(';').map(Number);
-          var maxPoints = results.maximum_points.split(';').map(Number);
-          var categories = Array(maxPoints.length).fill(null).map((_, i) => (i+1).toString());
-          console.log(receivedPoints);
-          console.log(maxPoints);
-          this.load(receivedPoints, maxPoints, categories);
+          receivedPoints = results.received_points.split(';').map(Number);
+          maxPoints = results.maximum_points.split(';').map(Number);
+          categories = Array(maxPoints.length).fill(null).map((_, i) => (i+1).toString());
         },
         error => this.error = <any>error,
+        () => this.load(receivedPoints, maxPoints, categories)
     )
-}
+  }
 
   public load(receivedPoints: number[], maxPoints: number[], categories: string[]){
         this.chartOptions = {
@@ -125,9 +127,9 @@ export class ResultComponent implements AfterViewInit{
             categories: categories
           },
           yaxis: {
-            min: 0,
+            min: -1,
             max: 4,
-            tickAmount: 4
+            tickAmount: 5
           },
           tooltip: {
             y: [
