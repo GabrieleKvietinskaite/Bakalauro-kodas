@@ -14,6 +14,7 @@ import {
     ApexLegend
   } from "ng-apexcharts";
 import { Router } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -43,9 +44,11 @@ export class ResultComponent implements AfterViewInit{
   error: string;
   gameId: number;
   scenarioId: number;
+  base64Image: string = 'data:image/png;base64,';
 
   constructor(private gameService: GameService,
-      private router: Router) {
+      private router: Router,
+      private sanitizer: DomSanitizer) {
           const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
           if(state === undefined){
               this.router.navigate(['scenarios']);
@@ -54,11 +57,24 @@ export class ResultComponent implements AfterViewInit{
           this.scenarioId = state.ScenarioId;
 
           this.getResults(this.gameId);
+          this.graph();
   }
 
   ngAfterViewInit(){
 
   }
+
+  graph(){
+    this.gameService.getGraph(this.gameId).subscribe(
+      data => {
+        this.base64Image += data;
+      }
+    );
+  }
+
+  transform(){
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image);
+}
 
   getResults(gameId: number){
     let receivedPoints;

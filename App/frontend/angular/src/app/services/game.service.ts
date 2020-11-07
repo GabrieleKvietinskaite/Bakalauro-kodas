@@ -50,6 +50,12 @@ export class GameService {
 
         return this.httpClient.get<IGame>(this.REST_API_SERVICE + url);
     }
+
+    getGraph(gameId: number){
+      var url = `/graph/game/${gameId}`;
+
+        return this.httpClient.get<string>(this.REST_API_SERVICE + url);
+    }
 /*
     getStatistics(){
         var url = `api/statistics`;

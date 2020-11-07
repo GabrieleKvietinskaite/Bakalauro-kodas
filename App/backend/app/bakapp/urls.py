@@ -46,4 +46,5 @@ urlpatterns = [
     path(r'api/games', views.GameListAPIView.as_view(), name='games-list'),
     url(r'api/game/create/player/(?P<player>[0-9]+)/scenario/(?P<scenario>[0-9]+)$', views.CreateGameAPIView.as_view()),
     url(r'api/game/(?P<pk>[0-9]+)$', views.GameAPIView.as_view()),
+    url(r'api/graph/game/(?P<pk>[0-9]+)$', views.GraphAPIView.as_view()),
 ]

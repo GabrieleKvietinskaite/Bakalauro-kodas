@@ -2,6 +2,7 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Competence, Player, Role, Scenario, Question, Answer, Game
 from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
+from app.graphs import *
 
 class CompetenceListAPIView(generics.ListCreateAPIView):
     queryset = Competence.objects.all()
@@ -76,3 +77,15 @@ class CreateGameAPIView(generics.CreateAPIView):
 class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
+
+class GraphAPIView(generics.GenericAPIView):
+    queryset = Game.objects.all()
+    serializer_class = GameSerializer
+
+    def get(self, request, *args, **kwargs):
+        game_id = kwargs.get('pk')
+        data = Game.objects.get(id=game_id)
+        graph = generate_normal_distribution(data.hypothesis)
+
+        return Response(graph, status=status.HTTP_200_OK)
+
