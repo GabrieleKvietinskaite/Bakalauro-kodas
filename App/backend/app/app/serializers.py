@@ -70,6 +70,18 @@ class AnswerSerializer(serializers.ModelSerializer):
             'weight': {
                 # Tell DRF that the link field is not required.
                 'required': False,
+            },
+            'quantity': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+            },
+            'p_answer': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+            },
+            'p_question_answer': {
+                # Tell DRF that the link field is not required.
+                'required': False,
             }
         }
 

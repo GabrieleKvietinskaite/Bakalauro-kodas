@@ -85,37 +85,13 @@ export class GameComponent implements OnInit {
     }
 
     updateData(answer: IAnswer){
-        let questions;
-        let points;
-        let maximumPoints;
-        let maxPoints = this.findMaxPoints();
-        let hyp;
-        let h = this.calculate(answer.p_question_answer, answer.p_answer);
+        let maximumPoints = this.findMaxPoints();
+        let hyp = this.calculate(answer.p_question_answer, answer.p_answer);
 
-        this.gameService.getGame(this.gameId).subscribe(
-            data => {
-                this.game.questions = data.questions,
-                this.game.received_points = data.received_points,
-                this.game.maximum_points = data.maximum_points,
-                this.game.hypothesis = data.hypothesis
-            },
+        this.gameService.updateGame(this.gameId, this.question.id.toString(), answer.weight.toString(), maximumPoints.toString(), hyp.toString()).subscribe(
+            _ => {},
             error => this.error = <any>error,
             () => {
-                if(this.game.questions != ""){
-                    questions = this.game.questions += ';' + this.question.id;
-                    points = this.game.received_points += ';' + answer.weight;
-                    maximumPoints = this.game.maximum_points += ';' + maxPoints;
-                    hyp = this.game.hypothesis += ';' + h;
-                }
-                else {
-                    questions =  this.question.id;
-                    points = answer.weight;
-                    maximumPoints = maxPoints;
-                    hyp = h;
-                }
-                this.gameService.updateGame(this.gameId, questions, points, maximumPoints, hyp).subscribe(
-                    error => this.error = <any>error
-                )
                 this.answers = [];
                 this.loadQuestion(answer.next_question_id);
             }
@@ -139,62 +115,24 @@ export class GameComponent implements OnInit {
     }
     
     finishGame() { 
-        let questions;
-        this.gameService.getGame(this.gameId).subscribe(
-            data => {
-                this.game.questions = data.questions
-            },
+        this.gameService.finishGame(this.gameId, this.question.id.toString()).subscribe(
+            _ => {},
             error => this.error = <any>error,
             () => {
-                if(this.game.questions != ""){
-                    questions = this.game.questions += ';' + this.question.id;
-                }
-                else {
-                    questions =  this.question.id;
-                }
-                this.gameService.finishGame(this.gameId, questions).subscribe(
-                    _ => {},
-                    error => this.error = <any>error,
-                    () => {
-                        const navigationExtras: NavigationExtras = { state: { GameId: this.gameId, ScenarioId: this.scenarioId } };
-                        this.router.navigate(['result'], navigationExtras);
-                    }
-                )
+                const navigationExtras: NavigationExtras = { state: { GameId: this.gameId, ScenarioId: this.scenarioId } };
+                this.router.navigate(['result'], navigationExtras);
             }
-        );
+        )
     }
 
     gameOver() {
-        let questions;
-        let points;
-        let maximumPoints;
         let maxPoints = this.findMaxPoints();
-        let hyp;
 
-        this.gameService.getGame(this.gameId).subscribe(
-            data => {
-                this.game.questions = data.questions,
-                this.game.received_points = data.received_points,
-                this.game.maximum_points = data.maximum_points,
-                this.game.hypothesis = data.hypothesis
-            },
+        this.gameService.updateGame(this.gameId, this.question.id.toString(), '-1', maxPoints.toString(), '0').subscribe(
+            _ => {},
             error => this.error = <any>error,
             () => {
-                if(this.game.questions != ""){
-                    questions = this.game.questions += ';' + this.question.id;
-                    points = this.game.received_points += ';-1';
-                    maximumPoints = this.game.maximum_points += ';' + maxPoints;
-                    hyp = this.game.hypothesis += ';0';
-                }
-                else {
-                    questions =  this.question.id;
-                    points = -1;
-                    maximumPoints = maxPoints;
-                    hyp = 0;
-                }
-                this.gameService.updateGame(this.gameId, questions, points, maximumPoints, hyp).subscribe(
-                    error => this.error = <any>error
-                )
+                
                 this.finishGame();
             }
         );
