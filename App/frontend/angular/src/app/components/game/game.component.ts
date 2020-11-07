@@ -123,13 +123,7 @@ export class GameComponent implements OnInit {
     }
 
     calculate(p_q_a: number, p_a: number){
-        let x = Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100000) / 100000;
-        //let x =((p_q_a * p_a) / this.question.p_question);
-        console.log(p_q_a);
-        console.log(p_a);
-        console.log(this.question.p_question);
-        console.log(x);
-        return x;
+        return Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100000) / 100000;
     }
     
     findMaxPoints(){
@@ -145,14 +139,29 @@ export class GameComponent implements OnInit {
     }
     
     finishGame() { 
-        this.gameService.finishGame(this.gameId).subscribe(
-            _ => {},
+        let questions;
+        this.gameService.getGame(this.gameId).subscribe(
+            data => {
+                this.game.questions = data.questions
+            },
             error => this.error = <any>error,
             () => {
-                const navigationExtras: NavigationExtras = { state: { GameId: this.gameId, ScenarioId: this.scenarioId } };
-                this.router.navigate(['result'], navigationExtras);
+                if(this.game.questions != ""){
+                    questions = this.game.questions += ';' + this.question.id;
+                }
+                else {
+                    questions =  this.question.id;
+                }
+                this.gameService.finishGame(this.gameId, questions).subscribe(
+                    _ => {},
+                    error => this.error = <any>error,
+                    () => {
+                        const navigationExtras: NavigationExtras = { state: { GameId: this.gameId, ScenarioId: this.scenarioId } };
+                        this.router.navigate(['result'], navigationExtras);
+                    }
+                )
             }
-        )
+        );
     }
 
     gameOver() {

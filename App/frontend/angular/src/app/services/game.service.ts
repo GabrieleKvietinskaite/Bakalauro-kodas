@@ -38,9 +38,9 @@ export class GameService {
         return this.httpClient.get<IGame>(this.REST_API_SERVICE + url);
     }
 
-    finishGame(gameId: number){
+    finishGame(gameId: number, questions: string){
         let url = `/game/${gameId}`;
-        let form = {"finished_at": new Date()};
+        let form = {"questions": questions, "finished_at": new Date()};
 
         return this.httpClient.put(this.REST_API_SERVICE + url, form, this.httpOptions);
     }
