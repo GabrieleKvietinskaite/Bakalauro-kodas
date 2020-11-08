@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { CountdownComponent } from 'ngx-countdown/countdown.component';
-import { IAnswer } from 'src/app/models/ianswer';
+import { IAnswer } from 'src/app/models/IAnswer.interface';
 import { IGame } from 'src/app/models/IGame.interface';
 import { IQuestion } from 'src/app/models/iquestion';
 import { AnswerService } from 'src/app/services/answer.service';

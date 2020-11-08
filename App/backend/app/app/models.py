@@ -32,9 +32,9 @@ class Scenario(models.Model):
 class Question(models.Model):
     scenario = models.ForeignKey(Scenario, related_name='questions', on_delete=models.CASCADE)
     question = models.CharField(max_length = 500)
-    win = models.BooleanField(null=True)
-    quantity = models.IntegerField()
-    average = models.DecimalField(max_digits=12, decimal_places=2)
+    is_winning = models.BooleanField(null=True)
+    times_showed = models.IntegerField()
+    times_lost = models.IntegerField()
     p_question = models.DecimalField(max_digits=3, decimal_places=2)
 
     def __str__(self):
@@ -47,7 +47,7 @@ class Answer(models.Model):
     answer = models.CharField(max_length = 500)
     next_question = models.ForeignKey(Question, related_name='next_answers', on_delete=models.CASCADE)
     weight = models.IntegerField()
-    quantity = models.IntegerField()
+    times_chosen = models.IntegerField()
     p_answer = models.DecimalField(max_digits=3, decimal_places=2)
     p_question_answer = models.DecimalField(max_digits=3, decimal_places=2)
 

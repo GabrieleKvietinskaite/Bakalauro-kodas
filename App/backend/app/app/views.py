@@ -44,8 +44,8 @@ class QuestionAPIView(generics.RetrieveUpdateDestroyAPIView):
         question = self.kwargs.get('question')
         query = Question.objects.filter(scenario_id=scenario, id=question)
         question_data = query.first()
-        quantity = question_data.quantity + 1
-        update = query.update(quantity=quantity)
+        times_showed = question_data.times_showed + 1
+        update = query.update(times_showed=times_showed)
         
         return Question.objects.get(scenario_id=scenario, id=question)
 
@@ -53,8 +53,8 @@ class QuestionAPIView(generics.RetrieveUpdateDestroyAPIView):
         query = Question.objects.filter(scenario_id=scenario, id=question)
         data = query.first()
         question_data = query.first()
-        average = question_data.average + 1
-        update = query.update(average=average)
+        times_lost = question_data.times_lost + 1
+        update = query.update(times_lost=times_lost)
         
         return Question.objects.get(scenario_id=scenario, id=question)
 
@@ -90,7 +90,7 @@ class AnswerQuantityAPIView(generics.RetrieveUpdateDestroyAPIView):
         query = Answer.objects.filter(scenario_id=scenario, question_id=question, number=answer)
         data = query.first()
 
-        return query.update(quantity=data.quantity+1)
+        return query.update(times_chosen=data.times_chosen+1)
 
 class GameListAPIView(generics.ListCreateAPIView):
     queryset = Game.objects.all()

@@ -21,7 +21,7 @@ export class AuthenticationService {
   }
 
   register(user: IRegistrationDetails) {
-    let form = {"username": user.Username, "email": user.Email, "password1": user.Password, "password2": user.Password}
+    let form = {"username": user.username, "email": user.email, "password1": user.password, "password2": user.password}
     return this.httpClient.post(this.AUTH_SERVICE + '/registration/', form);
   }
 

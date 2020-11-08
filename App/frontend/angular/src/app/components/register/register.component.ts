@@ -59,9 +59,9 @@ export class RegisterComponent implements OnInit {
       this.loading = true;
 
       const user: IRegistrationDetails = {
-        Username: this.f.username.value,
-        Email: this.f.email.value,
-        Password: this.f.password.value,
+        username: this.f.username.value,
+        email: this.f.email.value,
+        password: this.f.password.value,
       }
 
       this.authenticationService.register(user)

@@ -5,7 +5,7 @@ export interface IQuestion {
     scenario_id: number;
     question: string;
     win: Nullable<boolean>;
-    quantity: number;
-    average: number;
+    times_showed: number;
+    times_lost: number;
     p_question: number;
 }
