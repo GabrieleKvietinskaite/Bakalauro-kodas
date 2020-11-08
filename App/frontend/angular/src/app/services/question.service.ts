@@ -23,14 +23,6 @@ export class QuestionService {
       
       return this.httpClient.get<IQuestion>(this.REST_API_SERVICE + url);
   }
-/*
-  updateQuestion(scenarioId: number, questionId: number, answerId: number){
-      var url = `api/update/scenario/${scenarioId}/question/${questionId}/answer/${answerId}`;
-
-      return this.httpClient.post(url, this.httpOptions)
-          .pipe(map(response => response),
-              catchError(this.handleError));
-  }*/
 
   private handleError(error: HttpResponse<Error>) {
       return throwError(error);

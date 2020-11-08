@@ -5,6 +5,12 @@ from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer,
 from app.graphs import *
 from datetime import datetime
 
+def check(databas, request):
+    if not databas:
+        return request
+    else:
+        return databas + ';' + request
+
 class CompetenceListAPIView(generics.ListCreateAPIView):
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
@@ -36,6 +42,19 @@ class QuestionAPIView(generics.RetrieveUpdateDestroyAPIView):
     def get_object(self):
         scenario = self.kwargs.get('scenario')
         question = self.kwargs.get('question')
+        query = Question.objects.filter(scenario_id=scenario, id=question)
+        question_data = query.first()
+        quantity = question_data.quantity + 1
+        update = query.update(quantity=quantity)
+        
+        return Question.objects.get(scenario_id=scenario, id=question)
+
+    def game_over(scenario, question):
+        query = Question.objects.filter(scenario_id=scenario, id=question)
+        data = query.first()
+        question_data = query.first()
+        average = question_data.average + 1
+        update = query.update(average=average)
         
         return Question.objects.get(scenario_id=scenario, id=question)
 
@@ -88,12 +107,6 @@ class CreateGameAPIView(generics.CreateAPIView):
 
         return Response(data.id, status=status.HTTP_200_OK)
 
-def check(databas, request):
-    if not databas:
-        return request
-    else:
-        return databas + ';' + request
-
 class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
@@ -104,6 +117,9 @@ class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
         query = Game.objects.filter(id=game_id)
         data = query.first()
         questions = check(data.questions, request.data['question'])
+
+        if request.data.get('received_points') == '-1':
+            QuestionAPIView.game_over(data.scenario_id, request.data['question'])
 
         if function == 'update':
             received_points = check(data.received_points, request.data['received_points'])
@@ -118,9 +134,6 @@ class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
             update = query.update(questions=questions, finished_at=time)
 
             return Response(update, status=status.HTTP_200_OK)
-
-            
-        
 
 class GraphAPIView(generics.GenericAPIView):
     queryset = Game.objects.all()

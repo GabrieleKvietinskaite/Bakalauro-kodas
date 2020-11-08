@@ -132,7 +132,6 @@ export class GameComponent implements OnInit {
             _ => {},
             error => this.error = <any>error,
             () => {
-                
                 this.finishGame();
             }
         );
