@@ -24,6 +24,12 @@ export class AnswerService {
     return this.httpClient.get<IAnswer[]>(this.REST_API_SERVICE + url);
   }
 
+  updateAnswer(scenarioId: number, questionId: number, answerNumber: number){
+    var url = `/scenario/${scenarioId}/question/${questionId}/answer/${answerNumber}/update`;
+
+    return this.httpClient.get(this.REST_API_SERVICE + url);
+  }
+
   private handleError(error: HttpResponse<Error>) {
     return throwError(error);
   }

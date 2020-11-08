@@ -88,6 +88,7 @@ export class GameComponent implements OnInit {
         let maximumPoints = this.findMaxPoints();
         let hyp = this.calculate(answer.p_question_answer, answer.p_answer);
 
+        this.answerService.updateAnswer(this.scenarioId, this.question.id, answer.number).subscribe();
         this.gameService.updateGame(this.gameId, this.question.id.toString(), answer.weight.toString(), maximumPoints.toString(), hyp.toString()).subscribe(
             _ => {},
             error => this.error = <any>error,
