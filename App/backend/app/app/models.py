@@ -36,6 +36,11 @@ class Question(models.Model):
     times_showed = models.IntegerField()
     times_lost = models.IntegerField()
     p_question = models.DecimalField(max_digits=3, decimal_places=2)
+    availability = models.IntegerField()
+    defence = models.IntegerField()
+    reports = models.IntegerField()
+    business = models.IntegerField()
+    other = models.IntegerField()
 
     def __str__(self):
         return self.question

@@ -56,7 +56,8 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('id', 'scenario_id', 'question_id', 'number', 'answer', 'next_question_id', 'weight', 'times_chosen', 'p_answer', 'p_question_answer')
+        fields = ('id', 'scenario_id', 'question_id', 'number', 'answer', 'next_question_id', 'weight', 'times_chosen', 'p_answer', 'p_question_answer', 
+        'availability', 'defence', 'reports', 'business', 'other')
         extra_kwargs = {
             'number': {
                 # Tell DRF that the link field is not required.

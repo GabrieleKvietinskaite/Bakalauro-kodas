@@ -145,12 +145,15 @@ class GraphAPIView(generics.GenericAPIView):
             questions = [int(x) for x in data.questions.split(';')]
             del questions[-1]
             answers = []
+            availability = []
             
             for question in questions:
                 answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
+                availability.append(Question.objects.filter(scenario_id=data.scenario_id, id=question).values_list('availability', flat=True))
 
             normal_distribution = generate_normal_distribution(data.hypothesis)
             heatmap = getHeatmap(answers)
-            content = {'normal_distribution_graph': normal_distribution, 'answers_frequency_heatmap': heatmap}
+            availability = getAvailability(availability)
+            content = {'normal_distribution_graph': normal_distribution, 'answers_frequency_heatmap': heatmap, 'availability_graph': availability}
 
             return Response(content, status=status.HTTP_200_OK)

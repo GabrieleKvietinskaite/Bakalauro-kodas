@@ -246,3 +246,29 @@ def getHeatmap(answers_data):
     string = base64.b64encode(buf.read())
 
     return string
+
+def getAvailability(availability_data):
+    questions = range(1, len(availability_data)+1)
+    availability = availability_data
+
+    plt.ylim([0,100])
+    plt.xlim([1,len(availability_data)])
+    plt.xticks(questions)
+    plt.xlabel('Question\'s number', fontsize=10)
+    plt.ylabel('Services\' availability', fontsize=10)
+    plt.title('Services\' availability per question')
+
+    plt.scatter(questions, availability)
+    plt.plot(questions, availability)
+    plt.grid()
+
+    fig = plt.gcf()
+    plt.close(fig)
+    plt.ioff()
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+    string = base64.b64encode(buf.read())
+
+    return string
