@@ -51,9 +51,7 @@ class Answer(models.Model):
     p_answer = models.DecimalField(max_digits=3, decimal_places=2)
     p_question_answer = models.DecimalField(max_digits=3, decimal_places=2)
 
-    def __str__(self):
-        return self.answer
-
+    
 class Game(models.Model):
     player = models.ForeignKey(Player, related_name='games', on_delete=models.CASCADE)
     scenario = models.ForeignKey(Scenario, related_name='games', on_delete=models.CASCADE)

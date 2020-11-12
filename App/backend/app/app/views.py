@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from .models import Competence, Player, Role, Scenario, Question, Answer, Game
 from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
 from app.graphs import *
-from datetime import datetime
+from django.utils import timezone
 
 def check(databas, request):
     if not databas:
@@ -130,7 +130,7 @@ class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
             return Response(update, status=status.HTTP_200_OK)
 
         elif function == 'finish':
-            time = datetime.now()
+            time = timezone.now()
             update = query.update(questions=questions, finished_at=time)
 
             return Response(update, status=status.HTTP_200_OK)
@@ -140,8 +140,17 @@ class GraphAPIView(generics.GenericAPIView):
     serializer_class = GameSerializer
 
     def get(self, request, *args, **kwargs):
-        game_id = kwargs.get('pk')
-        data = Game.objects.get(id=game_id)
-        graph = generate_normal_distribution(data.hypothesis)
+            game_id = kwargs.get('pk')
+            data = Game.objects.get(id=game_id)
+            questions = [int(x) for x in data.questions.split(';')]
+            del questions[-1]
+            answers = []
+            
+            for question in questions:
+                answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
 
-        return Response(graph, status=status.HTTP_200_OK)
+            normal_distribution = generate_normal_distribution(data.hypothesis)
+            heatmap = getHeatmap(answers)
+            content = {'normal_distribution_graph': normal_distribution, 'answers_frequency_heatmap': heatmap}
+
+            return Response(content, status=status.HTTP_200_OK)

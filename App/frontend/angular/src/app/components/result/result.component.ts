@@ -15,6 +15,7 @@ import {
   } from "ng-apexcharts";
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
+import { IGraphs } from 'src/app/models/IGraphs.interface';
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -44,36 +45,37 @@ export class ResultComponent implements AfterViewInit{
   error: string;
   gameId: number;
   scenarioId: number;
+  graphs: IGraphs;
   base64Image: string = 'data:image/png;base64,';
 
   constructor(private gameService: GameService,
       private router: Router,
       private sanitizer: DomSanitizer) {
-          const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
+          /*const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
           if(state === undefined){
               this.router.navigate(['scenarios']);
-          }
-          this.gameId = state.GameId;
-          this.scenarioId = state.ScenarioId;
+          }*/
+          this.gameId = 112;
+          this.scenarioId = 1;
 
           this.getResults(this.gameId);
-          this.graph();
+          this.getGraphs();
   }
 
   ngAfterViewInit(){
 
   }
 
-  graph(){
-    this.gameService.getGraph(this.gameId).subscribe(
+  getGraphs(){
+    this.gameService.getGraphs(this.gameId).subscribe(
       data => {
-        this.base64Image += data;
+        this.graphs = data;
       }
     );
   }
 
-  transform(){
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image);
+  transform(graph: string){
+    return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image + graph);
 }
 
   getResults(gameId: number){

@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { IGame } from '../models/IGame.interface';
+import { IGraphs } from '../models/IGraphs.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -51,17 +52,9 @@ export class GameService {
         return this.httpClient.get<IGame>(this.REST_API_SERVICE + url);
     }
 
-    getGraph(gameId: number){
+    getGraphs(gameId: number){
       var url = `/graph/game/${gameId}`;
 
-        return this.httpClient.get<string>(this.REST_API_SERVICE + url);
+        return this.httpClient.get<IGraphs>(this.REST_API_SERVICE + url);
     }
-/*
-    getStatistics(){
-        var url = `api/statistics`;
-
-        return this.http.get<IStatistics>(url, options)
-            .pipe(map(response => response),
-                catchError(this.handleError));
-    }*/
 }
