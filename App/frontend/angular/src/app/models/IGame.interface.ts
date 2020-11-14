@@ -5,5 +5,4 @@ export interface IGame {
     questions: string;
     received_points: string;
     maximum_points: string;
-    hypothesis: string;
 }

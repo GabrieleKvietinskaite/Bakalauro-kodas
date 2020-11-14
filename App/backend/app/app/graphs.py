@@ -7,7 +7,7 @@ import urllib, base64
 
 matplotlib.use('Agg')
 
-def generate_normal_distribution(data, hypothesis):
+def generate_normal_distribution(data, received_points):
     mean, std = scipy.stats.norm.fit(data)
 
     x_min = mean - 3*std
@@ -118,7 +118,7 @@ def generate_normal_distribution(data, hypothesis):
     #----------------------------------------------------------------------------------------#
     plt.plot(x,y, color='black')
 
-    plt.scatter(hypothesis, 0.00000, color='red') 
+    plt.scatter(received_points, 0.00000, color='red') 
 
     plt.xlim(x_min, x_max)
 

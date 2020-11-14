@@ -119,14 +119,13 @@ class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
         data = query.first()
         questions = check(data.questions, request.data['question'])
 
-        if request.data.get('received_points') == '-1':
+        if request.data.get('received_points') == '0':
             QuestionAPIView.game_over(data.scenario_id, request.data['question'])
 
         if function == 'update':
             received_points = check(data.received_points, request.data['received_points'])
             maximum_points = check(data.maximum_points, request.data['maximum_points'])
-            hypothesis = check(data.hypothesis, request.data['hypothesis'])
-            update = query.update(questions=questions, received_points=received_points, maximum_points=maximum_points, hypothesis=hypothesis)
+            update = query.update(questions=questions, received_points=received_points, maximum_points=maximum_points)
 
             return Response(update, status=status.HTTP_200_OK)
 
@@ -153,10 +152,10 @@ class ResultsAPIView(generics.GenericAPIView):
         data = Game.objects.get(id=game_id)
         level = Role_level.objects.get(id=data.scenario.level.id)
 
-        hypothesis = split_to_float_array(data.hypothesis, ';')
+        received_points = split_to_float_array(data.received_points, ';')
         
         
-        if hypothesis[-1] != 0:
+        if received_points[-1] != 0:
             questions = [int(x) for x in data.questions.split(';')]
             del questions[-1]
             test = []
@@ -170,11 +169,11 @@ class ResultsAPIView(generics.GenericAPIView):
                 reports.append(question_data.values_list('reports', flat=True)[0])
                 other.append(question_data.values_list('other', flat=True)[0])
 
-            passed = calculateLevelPass(hypothesis, level)
+            passed = calculateLevelPass(received_points, level)
             if passed == 'passed':
                 query.update(level_after=level.id)
                 players = Player.objects.filter(level=level)
-                test = Game.objects.filter(player__in=players).values_list('hypothesis', flat=True)
+                test = Game.objects.filter(player__in=players).values_list('received_points', flat=True)
 
             test_ = []
             for x in test:
@@ -186,7 +185,7 @@ class ResultsAPIView(generics.GenericAPIView):
                 summed_hyp.append(calculateSum(x))
 
             query.update(results=calculateResults(availability, business, defence, reports, other))
-            normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(hypothesis))
+            normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(received_points))
             #heatmap = getHeatmap(answers)
             content = {'normal_distribution_graph': normal_distribution, 'availability_graph': getAvailability(availability), 'level': level.level, 'passed': passed}
 

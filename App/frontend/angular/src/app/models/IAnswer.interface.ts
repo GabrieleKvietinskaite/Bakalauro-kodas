@@ -5,7 +5,6 @@ export interface IAnswer {
     number: number;
     answer: string;
     next_question_id: number;
-    weight: number;
     times_chosen: number;
     p_answer: number;
     p_question_answer: number;

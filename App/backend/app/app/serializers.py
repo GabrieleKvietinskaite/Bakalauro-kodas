@@ -90,7 +90,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
-        fields = ('id', 'player_id', 'scenario_id', 'questions', 'received_points', 'maximum_points', 'hypothesis', 
+        fields = ('id', 'player_id', 'scenario_id', 'questions', 'received_points', 'maximum_points', 
         'level_before', 'level_after', 'started_at', 'finished_at')
         extra_kwargs = {
             'questions': {
@@ -104,11 +104,6 @@ class GameSerializer(serializers.ModelSerializer):
                 'allow_blank': True,
             },
             'maximum_points': {
-                # Tell DRF that the link field is not required.
-                'required': False,
-                'allow_blank': True,
-            },
-            'hypothesis': {
                 # Tell DRF that the link field is not required.
                 'required': False,
                 'allow_blank': True,

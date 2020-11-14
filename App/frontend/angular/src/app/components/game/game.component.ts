@@ -26,8 +26,7 @@ export class GameComponent implements OnInit {
         scenario_id: null,
         questions: "",
         received_points: "",
-        maximum_points: "",
-        hypothesis: ""
+        maximum_points: ""
     };
     @ViewChild('countdown', { static: false }) private counter: CountdownComponent;
 
@@ -89,7 +88,7 @@ export class GameComponent implements OnInit {
         let hyp = this.calculate(answer.p_question_answer, answer.p_answer);
 
         this.answerService.updateAnswer(this.scenarioId, this.question.id, answer.number).subscribe();
-        this.gameService.updateGame(this.gameId, this.question.id.toString(), answer.weight.toString(), maximumPoints.toString(), hyp.toString()).subscribe(
+        this.gameService.updateGame(this.gameId, this.question.id.toString(), hyp.toString(), maximumPoints.toString(), ).subscribe(
             _ => {},
             error => this.error = <any>error,
             () => {
@@ -98,21 +97,22 @@ export class GameComponent implements OnInit {
             }
         );
     }
-
-    calculate(p_q_a: number, p_a: number){
-        return Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100000) / 100000;
-    }
     
     findMaxPoints(){
         var max = 0;
 
-        this.answers.forEach(function(value){
-            if(value.weight > max){
-                max = value.weight;
+        this.answers.forEach(value => {
+            let temp = this.calculate(value.p_question_answer, value.p_answer);
+            if(temp > max){
+                max = temp;
             }
         })
 
         return max;
+    }
+
+    calculate(p_q_a: number, p_a: number){
+        return Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100000) / 100000;
     }
     
     finishGame() { 
@@ -129,7 +129,7 @@ export class GameComponent implements OnInit {
     gameOver() {
         let maxPoints = this.findMaxPoints();
 
-        this.gameService.updateGame(this.gameId, this.question.id.toString(), '-1', maxPoints.toString(), '0').subscribe(
+        this.gameService.updateGame(this.gameId, this.question.id.toString(), '0', maxPoints.toString()).subscribe(
             _ => {},
             error => this.error = <any>error,
             () => {
