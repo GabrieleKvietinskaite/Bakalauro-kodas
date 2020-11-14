@@ -26,9 +26,9 @@ export class GameService {
         return this.httpClient.post(this.REST_API_SERVICE + url, form);
     }
 
-    updateGame(gameId: number, question: string, points: string, maximumPoints: string, hypothesis: string){
+    updateGame(gameId: number, question: string, points: string, maximumPoints: string){
         let url = `/game/${gameId}/update`;
-        let form = {"question": question, "received_points": points, "maximum_points": maximumPoints, "hypothesis": hypothesis};
+        let form = {"question": question, "received_points": points, "maximum_points": maximumPoints};
 
         return this.httpClient.put(this.REST_API_SERVICE + url, form, this.httpOptions);
     }
@@ -53,7 +53,7 @@ export class GameService {
     }
 
     getGraphs(gameId: number){
-      var url = `/graph/game/${gameId}`;
+      var url = `/results/game/${gameId}`;
 
         return this.httpClient.get<IGraphs>(this.REST_API_SERVICE + url);
     }

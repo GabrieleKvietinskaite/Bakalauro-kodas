@@ -8,9 +8,4 @@ export interface IQuestion {
     times_showed: number;
     times_lost: number;
     p_question: number;
-    availability: number;
-    business: number;
-    defence: number;
-    report: number;
-    other: number;
 }

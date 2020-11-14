@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
-from .models import Competence, Player, Role, Scenario, Question, Answer, Game
-from .serializers import CompetenceSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
+from .models import Competence, Role_level, Player, Role, Scenario, Question, Answer, Game
+from .serializers import CompetenceSerializer, Role_levelSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
 from app.graphs import *
 from django.utils import timezone
 
@@ -103,7 +103,8 @@ class CreateGameAPIView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         player = kwargs.get('player')
         scenario = kwargs.get('scenario')
-        data = Game.objects.create(player_id=player, scenario_id=scenario)
+        player_level = Player.objects.filter(id=player).values_list('level', flat=True)[0]
+        data = Game.objects.create(player_id=player, scenario_id=scenario, level_before_id=player_level)
 
         return Response(data.id, status=status.HTTP_200_OK)
 
@@ -135,25 +136,60 @@ class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
 
             return Response(update, status=status.HTTP_200_OK)
 
-class GraphAPIView(generics.GenericAPIView):
+class ResultsAPIView(generics.GenericAPIView):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
 
     def get(self, request, *args, **kwargs):
-            game_id = kwargs.get('pk')
-            data = Game.objects.get(id=game_id)
+        answers = []
+        availability = []
+        business = []
+        defence = []
+        reports = []
+        other = []
+
+        game_id = kwargs.get('pk')
+        query = Game.objects.filter(id=game_id)
+        data = Game.objects.get(id=game_id)
+        level = Role_level.objects.get(id=data.scenario.level.id)
+
+        hypothesis = split_to_float_array(data.hypothesis, ';')
+        
+        
+        if hypothesis[-1] != 0:
             questions = [int(x) for x in data.questions.split(';')]
             del questions[-1]
-            answers = []
-            availability = []
-            
+            test = []
             for question in questions:
-                answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
-                availability.append(Question.objects.filter(scenario_id=data.scenario_id, id=question).values_list('availability', flat=True))
+                question_data = Question.objects.filter(scenario_id=data.scenario_id, id=question)
 
-            normal_distribution = generate_normal_distribution(data.hypothesis)
-            heatmap = getHeatmap(answers)
-            availability = getAvailability(availability)
-            content = {'normal_distribution_graph': normal_distribution, 'answers_frequency_heatmap': heatmap, 'availability_graph': availability}
+                answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
+                availability.append(question_data.values_list('availability', flat=True)[0])
+                business.append(question_data.values_list('business', flat=True)[0])
+                defence.append(question_data.values_list('defence', flat=True)[0])
+                reports.append(question_data.values_list('reports', flat=True)[0])
+                other.append(question_data.values_list('other', flat=True)[0])
+
+            passed = calculateLevelPass(hypothesis, level)
+            if passed == 'passed':
+                query.update(level_after=level.id)
+                players = Player.objects.filter(level=level)
+                test = Game.objects.filter(player__in=players).values_list('hypothesis', flat=True)
+
+            test_ = []
+            for x in test:
+                test_.append(split_to_float_array(x, ';'))
+            
+            
+            summed_hyp = []
+            for x in test_:
+                summed_hyp.append(calculateSum(x))
+
+            query.update(results=calculateResults(availability, business, defence, reports, other))
+            normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(hypothesis))
+            #heatmap = getHeatmap(answers)
+            content = {'normal_distribution_graph': normal_distribution, 'availability_graph': getAvailability(availability), 'level': level.level, 'passed': passed}
 
             return Response(content, status=status.HTTP_200_OK)
+        else:
+            return Response({'results': 'game over'}, status=status.HTTP_200_OK)

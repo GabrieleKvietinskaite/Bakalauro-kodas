@@ -7,9 +7,7 @@ import urllib, base64
 
 matplotlib.use('Agg')
 
-def generate_normal_distribution(hypothesis):
-    data =  [float(x) for x in hypothesis.split(';')]
-
+def generate_normal_distribution(data, hypothesis):
     mean, std = scipy.stats.norm.fit(data)
 
     x_min = mean - 3*std
@@ -120,8 +118,7 @@ def generate_normal_distribution(hypothesis):
     #----------------------------------------------------------------------------------------#
     plt.plot(x,y, color='black')
 
-    for x in data:
-        plt.scatter(x, 0.0, color='red') 
+    plt.scatter(hypothesis, 0.00000, color='red') 
 
     plt.xlim(x_min, x_max)
 
@@ -224,9 +221,6 @@ def getHeatmap(answers_data):
             arr[len(answers_data)-1-j][i] = answers_data[i][j]
 
     data = arr
-    print(answers_data)
-    print(type(data[3][1]))
-    print(data)
 
     fig, ax = plt.subplots()
 
@@ -272,3 +266,35 @@ def getAvailability(availability_data):
     string = base64.b64encode(buf.read())
 
     return string
+
+def calculateAverage(data):
+    sum = calculateSum(data)
+
+    return int(sum/len(data))
+
+def calculateResults(availability_data, business_data, defence_data, reports_data, other_data):
+    return (calculateAverage(availability_data) * 0.45 +
+        calculateAverage(business_data) * 0.2 +
+        calculateAverage(defence_data) * 0.2 +
+        calculateAverage(reports_data) * 0.1 +
+        calculateAverage(other_data) * 0.05)
+
+def calculateLevelPass(hypothesis_data, level):
+    hyp_sum = calculateSum(hypothesis_data)
+    
+    if hyp_sum > level.points_to/2:
+        return 'passed'
+    else:
+        return 'failed'
+
+def calculateSum(data):
+    sum = 0
+
+    for x in data:
+        sum += x
+
+    return round(sum, 5)
+
+def split_to_float_array(data, split_by):
+
+    return [float(x) for x in data.split(split_by)]
