@@ -3,7 +3,9 @@ from rest_framework.response import Response
 from .models import Competence, Role_level, Player, Role, Scenario, Question, Answer, Game
 from .serializers import CompetenceSerializer, Role_levelSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
 from app.graphs import *
+from app.report import *
 from django.utils import timezone
+from django.http import FileResponse
 
 def check(databas, request):
     if not databas:
@@ -161,8 +163,9 @@ class ResultsAPIView(generics.GenericAPIView):
             test = []
             for question in questions:
                 question_data = Question.objects.filter(scenario_id=data.scenario_id, id=question)
-
-                answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
+                answer_data = Answer.objects.filter(scenario_id=data.scenario_id, question_id=question)
+                weights = bay(list(answer_data.values_list('p_answer', flat=True)), list(answer_data.values_list('p_question_answer', flat=True)), list(question_data.values_list('p_question', flat=True)))
+                answers.append(weights)
                 availability.append(question_data.values_list('availability', flat=True)[0])
                 business.append(question_data.values_list('business', flat=True)[0])
                 defence.append(question_data.values_list('defence', flat=True)[0])
@@ -186,9 +189,37 @@ class ResultsAPIView(generics.GenericAPIView):
 
             query.update(results=calculateResults(availability, business, defence, reports, other))
             normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(received_points))
-            #heatmap = getHeatmap(answers)
-            content = {'normal_distribution_graph': normal_distribution, 'availability_graph': getAvailability(availability), 'level': level.level, 'passed': passed}
+            heatmap = getHeatmap(answers)
+            
+            info = []
+            info.append(Player.objects.filter(id=data.player_id).values_list('first_name', flat=True)[0] + ' ' + Player.objects.filter(id=data.player_id).values_list('last_name', flat=True)[0])
+            info.append(Scenario.objects.filter(id=data.scenario_id).values_list('title', flat=True)[0])
+            info.append(data.scenario.level.level)
+            if data.level_before is None:
+                info.append(data.level_before)
+            else:
+                 info.append(data.level_before.level)
+            if data.level_after is None:
+                info.append(data.level_after)
+            else:
+                info.append(data.level_after.level)
+            info.append(str(data.started_at).split('.')[0])
+            info.append(str(data.finished_at).split('.')[0])
 
-            return Response(content, status=status.HTTP_200_OK)
+            bar_plot_labels = []
+            bar_plot_data = []
+            
+            all_levels = list(Role_level.objects.filter())
+            for x in all_levels:
+                bar_plot_labels.append(x.level)
+                bar_plot_data.append(Player.objects.filter(level=x.id).count())
+
+            report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data))
+
+            #query.update(report=report_g)
+
+            content = { 'report': report_g}
+
+            return FileResponse(report_g, as_attachment=True, filename='hello.pdf')
         else:
             return Response({'results': 'game over'}, status=status.HTTP_200_OK)

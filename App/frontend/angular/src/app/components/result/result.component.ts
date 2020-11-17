@@ -47,19 +47,20 @@ export class ResultComponent implements AfterViewInit{
   scenarioId: number;
   graphs: IGraphs;
   base64Image: string = 'data:image/png;base64,';
+  pdfSrc;
 
   constructor(private gameService: GameService,
       private router: Router,
       private sanitizer: DomSanitizer) {
-          const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
-          if(state === undefined){
-              this.router.navigate(['scenarios']);
-          }
-          this.gameId = state.GameId;
-          this.scenarioId = state.ScenarioId;
-
-          this.getResults(this.gameId);
-          this.getGraphs();
+          //const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
+          //if(state === undefined){
+          //    this.router.navigate(['scenarios']);
+          //}
+          this.gameId = 29;
+          this.scenarioId = 1;
+          this.getReport();
+          //this.getResults(this.gameId);
+          //this.getGraphs();
   }
 
   ngAfterViewInit(){
@@ -91,6 +92,14 @@ export class ResultComponent implements AfterViewInit{
         },
         error => this.error = <any>error,
         () => this.load(receivedPoints, maxPoints, categories)
+    )
+  }
+
+  getReport(){
+    this.gameService.getReport(this.gameId).subscribe(
+      report => {
+        this.pdfSrc = window.URL.createObjectURL(report);
+      }
     )
   }
 

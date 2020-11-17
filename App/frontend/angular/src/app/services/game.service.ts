@@ -57,4 +57,10 @@ export class GameService {
 
         return this.httpClient.get<IGraphs>(this.REST_API_SERVICE + url);
     }
+
+    getReport(gameId: number){
+      var url = `/results/game/${gameId}`;
+
+      return this.httpClient.get(this.REST_API_SERVICE + url, { responseType: 'blob' });
+    }
 }

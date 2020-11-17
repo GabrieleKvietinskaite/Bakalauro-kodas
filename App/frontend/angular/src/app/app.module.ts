@@ -17,6 +17,7 @@ import { GameComponent } from './components/game/game.component';
 import { ResultComponent } from './components/result/result.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CountdownModule } from 'ngx-countdown';
+import { PdfViewerModule } from 'ng2-pdf-viewer';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { CountdownModule } from 'ngx-countdown';
     HttpClientModule,
     NgSelectModule,
     NgApexchartsModule,
-    CountdownModule 
+    CountdownModule,
+    PdfViewerModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }

@@ -134,12 +134,11 @@ def generate_normal_distribution(data, received_points):
     buf = io.BytesIO()
     fig.savefig(buf, format='png')
     buf.seek(0)
-    string = base64.b64encode(buf.read())
 
-    return string
+    return buf
 
 def func(x, pos):
-    return format(x).replace("-", "").replace(".0", "")
+    return format(x).replace("-", "")
 
 def heatmap(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
@@ -225,7 +224,7 @@ def getHeatmap(answers_data):
     fig, ax = plt.subplots()
 
     im, cbar = heatmap(data, answers_numbers, questions, ax=ax,
-                    cmap="magma_r", cbarlabel="Answers frequency per question")
+                    cmap="YlGn", cbarlabel="Answers frequency per question")
 
     valfmt=matplotlib.ticker.FuncFormatter(func)
     texts = annotate_heatmap(im, valfmt=valfmt)
@@ -237,9 +236,8 @@ def getHeatmap(answers_data):
     buf = io.BytesIO()
     fig.savefig(buf, format='png')
     buf.seek(0)
-    string = base64.b64encode(buf.read())
 
-    return string
+    return buf
 
 def getAvailability(availability_data):
     questions = range(1, len(availability_data)+1)
@@ -263,9 +261,8 @@ def getAvailability(availability_data):
     buf = io.BytesIO()
     fig.savefig(buf, format='png')
     buf.seek(0)
-    string = base64.b64encode(buf.read())
 
-    return string
+    return buf
 
 def calculateAverage(data):
     sum = calculateSum(data)
@@ -298,3 +295,79 @@ def calculateSum(data):
 def split_to_float_array(data, split_by):
 
     return [float(x) for x in data.split(split_by)]
+
+def bay(p_a_arr, p_q_a_arr, p_q):
+    data = []
+    
+    for x in range(0, len(p_a_arr)):
+        l = round((p_q_a_arr[x] * p_a_arr[x]) / p_q[0], 5)
+        data.append(l)
+        #print(str(p_q_a_arr[x]) + '*' + str(p_a_arr[x]) + '/' + str(p_q[0]))
+        #print(l)
+
+    return data
+
+def hmap(answers_data):
+    vegetables = range(4, 0, -1)
+    farmers = range(1, len(answers_data)+1)
+
+    arr = np.full((4, len(answers_data)), np.nan)
+
+    for i in range(len(answers_data)):
+        for j in range(len(answers_data[i])):
+            arr[len(answers_data)-1-j][i] = answers_data[i][j]
+
+    harvest = arr
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(harvest, cmap='hot')
+
+    # We want to show all ticks...
+    ax.set_xticks(np.arange(len(farmers)))
+    ax.set_yticks(np.arange(len(vegetables)))
+    # ... and label them with the respective list entries
+    ax.set_xticklabels(farmers)
+    ax.set_yticklabels(vegetables)
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+            rotation_mode="anchor")
+
+    # Loop over data dimensions and create text annotations.
+    for i in range(len(vegetables)):
+        for j in range(len(farmers)):
+            text = ax.text(j, i, harvest[i, j],
+                        ha="center", va="center", color="w")
+
+    fig = plt.gcf()
+    plt.close(fig)
+    plt.ioff()
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+
+    return buf
+
+def bar_plot(labels, data):
+    x = labels
+    energy = data
+
+    x_pos = [i for i, _ in enumerate(x)]
+
+    plt.bar(x_pos, energy, color='green')
+    plt.xlabel("Level")
+    plt.ylabel("Number")
+    plt.title("Number of people by level")
+
+    plt.xticks(x_pos, x)
+
+    fig = plt.gcf()
+    plt.close(fig)
+    plt.ioff()
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+
+    return buf

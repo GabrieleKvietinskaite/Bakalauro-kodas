@@ -1,18 +1,5 @@
-<div id="chart">
-    <apx-chart
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [xaxis]="chartOptions.xaxis"
-      [stroke]="chartOptions.stroke"
-      [tooltip]="chartOptions.tooltip"
-      [dataLabels]="chartOptions.dataLabels"
-      [legend]="chartOptions.legend"
-      [markers]="chartOptions.markers"
-      [grid]="chartOptions.grid"
-      [yaxis]="chartOptions.yaxis"
-      [title]="chartOptions.title"
-    ></apx-chart>
-  </div>
-  <img [src]="transform(graphs.normal_distribution_graph)">
-
-  <img [src]="transform(graphs.availability_graph)">
+<pdf-viewer [src]="pdfSrc" 
+[render-text]="true"
+[show-borders]="true"
+style="display: block;"
+></pdf-viewer>
