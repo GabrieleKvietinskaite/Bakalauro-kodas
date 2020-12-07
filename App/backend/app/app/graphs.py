@@ -124,8 +124,7 @@ def generate_normal_distribution(data, received_points):
 
     plt.title('',fontsize=10)
 
-    plt.xlabel('x')
-    plt.ylabel('Normal Distribution')
+    plt.xlabel('Received points')
 
     fig = plt.gcf()
     plt.close(fig)
@@ -209,7 +208,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:i}",
 
     return texts
 
-def getHeatmap(answers_data):
+def getHeatmap(answers_data, answers_n):
     answers_numbers = range(4, 0, -1)
     questions = range(1, len(answers_data)+1)
 
@@ -225,6 +224,10 @@ def getHeatmap(answers_data):
 
     im, cbar = heatmap(data, answers_numbers, questions, ax=ax,
                     cmap="YlGn", cbarlabel="Answers frequency per question")
+
+    for x in range(0, len(answers_n)):
+        plt.scatter(x, len(answers_n)-answers_n[x], s=1000, color="none", edgecolor='#cf7879') 
+        
 
     valfmt=matplotlib.ticker.FuncFormatter(func)
     texts = annotate_heatmap(im, valfmt=valfmt)
@@ -293,7 +296,8 @@ def calculateSum(data):
     return round(sum, 5)
 
 def split_to_float_array(data, split_by):
-
+    print(data)
+    print("-----------------")
     return [float(x) for x in data.split(split_by)]
 
 def bay(p_a_arr, p_q_a_arr, p_q):
@@ -361,6 +365,33 @@ def bar_plot(labels, data):
     plt.title("Number of people by level")
 
     plt.xticks(x_pos, x)
+
+    fig = plt.gcf()
+    plt.close(fig)
+    plt.ioff()
+
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png')
+    buf.seek(0)
+
+    return buf
+
+def best_road(data_best, data):
+    best = data_best
+    players = data
+    questions = range(1, len(best)+1)
+
+    plt.xlim([1,len(questions)])
+    plt.xticks(questions)
+    plt.xlabel('Question\'s number', fontsize=10)
+    plt.ylabel('Points', fontsize=10)
+    plt.title('Maximum and received points per question')
+
+    plt.plot(questions, data_best, label="Maximum points")
+    plt.plot(questions, data, label="Received points")
+    plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
+          fancybox=True, ncol=2)
+    plt.grid()
 
     fig = plt.gcf()
     plt.close(fig)

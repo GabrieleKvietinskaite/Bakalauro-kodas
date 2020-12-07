@@ -148,6 +148,7 @@ class ResultsAPIView(generics.GenericAPIView):
         defence = []
         reports = []
         other = []
+        answers_n = []
 
         game_id = kwargs.get('pk')
         query = Game.objects.filter(id=game_id)
@@ -155,17 +156,20 @@ class ResultsAPIView(generics.GenericAPIView):
         level = Role_level.objects.get(id=data.scenario.level.id)
 
         received_points = split_to_float_array(data.received_points, ';')
-        
+        maximum_points = split_to_float_array(data.maximum_points, ';')
         
         if received_points[-1] != 0:
             questions = [int(x) for x in data.questions.split(';')]
+            for x in range(1, len(questions)):
+                answers_n.append((Answer.objects.filter(scenario_id=data.scenario_id, next_question_id=questions[x]).values_list('number', flat=True)[0]))
+
             del questions[-1]
             test = []
             for question in questions:
                 question_data = Question.objects.filter(scenario_id=data.scenario_id, id=question)
                 answer_data = Answer.objects.filter(scenario_id=data.scenario_id, question_id=question)
-                weights = bay(list(answer_data.values_list('p_answer', flat=True)), list(answer_data.values_list('p_question_answer', flat=True)), list(question_data.values_list('p_question', flat=True)))
-                answers.append(weights)
+                #weights = bay(list(answer_data.values_list('p_answer', flat=True)), list(answer_data.values_list('p_question_answer', flat=True)), list(question_data.values_list('p_question', flat=True)))
+                answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
                 availability.append(question_data.values_list('availability', flat=True)[0])
                 business.append(question_data.values_list('business', flat=True)[0])
                 defence.append(question_data.values_list('defence', flat=True)[0])
@@ -187,9 +191,10 @@ class ResultsAPIView(generics.GenericAPIView):
             for x in test_:
                 summed_hyp.append(calculateSum(x))
 
-            query.update(results=calculateResults(availability, business, defence, reports, other))
+            #query.update(results=calculateResults(availability, business, defence, reports, other))
             normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(received_points))
-            heatmap = getHeatmap(answers)
+            heatmap = best_road(maximum_points, received_points)
+            htmap = getHeatmap(answers, answers_n)
             
             info = []
             info.append(Player.objects.filter(id=data.player_id).values_list('first_name', flat=True)[0] + ' ' + Player.objects.filter(id=data.player_id).values_list('last_name', flat=True)[0])
@@ -214,7 +219,16 @@ class ResultsAPIView(generics.GenericAPIView):
                 bar_plot_labels.append(x.level)
                 bar_plot_data.append(Player.objects.filter(level=x.id).count())
 
-            report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data))
+            arr = []
+            arr.append(calculateAverage(availability))
+            arr.append(calculateAverage(business))
+            arr.append(calculateAverage(defence))
+            arr.append(calculateAverage(reports))
+            arr.append(calculateAverage(other))
+            arr.append(calculateResults(availability, business, defence, reports, other))
+        
+
+            report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data), htmap, arr)
 
             #query.update(report=report_g)
 

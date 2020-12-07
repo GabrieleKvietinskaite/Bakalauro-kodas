@@ -52,11 +52,15 @@ export class ResultComponent implements AfterViewInit{
   constructor(private gameService: GameService,
       private router: Router,
       private sanitizer: DomSanitizer) {
-          //const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
-          //if(state === undefined){
-          //    this.router.navigate(['scenarios']);
-          //}
-          this.gameId = 29;
+          /*
+          const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
+          if(state === undefined){
+              this.router.navigate(['scenarios']);
+          }
+          this.gameId = this.gameId
+          this.scenarioId = this.scenarioId;
+          */
+          this.gameId = 45;
           this.scenarioId = 1;
           this.getReport();
           //this.getResults(this.gameId);
