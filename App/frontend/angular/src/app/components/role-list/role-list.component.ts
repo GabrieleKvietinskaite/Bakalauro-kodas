@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { IRole } from '../../models/IRole.interface';
@@ -12,7 +12,8 @@ import { IRole } from '../../models/IRole.interface';
 export class RoleListComponent implements OnInit {
 
   roles: IRole[];
-  selected: IRole [];
+  //selected: IRole[];
+  selected: IRole;
 
   constructor(private userService: UserService,
               private router: Router,
@@ -25,10 +26,11 @@ export class RoleListComponent implements OnInit {
   }
 
   saveRoles(){
-    let userRoles = this.selected.map(x => x.id).sort((a, b) => a - b).toString();
+    //let userRoles = this.selected.map(x => x.id).toString();
+    let userRoles = this.selected.id.toString();
     let playerId = this.authentcationService.getTokenPlayerId();
     this.userService.saveRoles(playerId, userRoles).subscribe();
-    //this.router.navigate(['menu']);
+    const navigationExtras: NavigationExtras = { state: { Competences: this.selected.competences } };
+    this.router.navigate(['competences'], navigationExtras);
   }
-
 }

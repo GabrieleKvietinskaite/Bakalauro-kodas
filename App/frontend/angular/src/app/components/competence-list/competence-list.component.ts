@@ -15,19 +15,26 @@ export class CompetenceListComponent implements OnInit {
   selected: ICompetence [];
 
   constructor(private userService: UserService,
-              private router: Router,
-              private authentcationService: AuthenticationService) { }
+    private router: Router,
+    private authentcationService: AuthenticationService) {
+      const state = this.router.getCurrentNavigation().extras.state as {Competences: ICompetence[]};
+      if(state === undefined){
+          this.router.navigate(['roles']);
+      }
+      this.competences = state.Competences;
+  }
 
   ngOnInit(): void {
+    /*
     this.userService.getCompetences().subscribe((data: any[]) =>{
       this.competences = data;
-    })
+    })*/
   }
 
   saveCompetences(){
     let userCompetences = this.selected.map(x => x.id).sort((a, b) => a - b).toString();
     let playerId = this.authentcationService.getTokenPlayerId();
     this.userService.saveCompetences(playerId, userCompetences).subscribe();
-    this.router.navigate(['roles']);
+    this.router.navigate(['scenarios']);
   }
 }

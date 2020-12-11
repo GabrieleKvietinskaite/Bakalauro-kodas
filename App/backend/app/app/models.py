@@ -8,7 +8,7 @@ class Role(models.Model):
 class Competence(models.Model):
     competence = models.CharField(max_length = 100)
     description = models.CharField(max_length = 500)
-    roles = models.ManyToManyField(Role, related_name='competence_list', blank=True)
+    roles = models.ManyToManyField(Role, related_name='competences', blank=True)
 
 class Role_level(models.Model):
     level = models.CharField(max_length = 100)
