@@ -31,9 +31,11 @@ class PlayerSerializer(UserDetailsSerializer):
         }
 
 class RoleSerializer(serializers.ModelSerializer):
+    competence_list = CompetenceSerializer(many=True, read_only=True)
+
     class Meta:
         model = Role
-        fields = ('id', 'role', 'description')
+        fields = ('id', 'role', 'description', 'competence_list')
 
 class ScenarioSerializer(serializers.ModelSerializer):
     class Meta:
