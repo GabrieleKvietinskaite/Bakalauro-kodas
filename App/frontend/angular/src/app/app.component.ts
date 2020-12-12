@@ -16,6 +16,7 @@ export class AppComponent {
       private authenticationService: AuthenticationService
   ) {
       this.authenticationService.token.subscribe(x => this.token = x);
+      console.log(this.authenticationService.isTokenExpired())
   }
 
   logout() {
