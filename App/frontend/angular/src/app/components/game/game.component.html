@@ -1,11 +1,11 @@
 <div *ngIf="question">
-  <countdown *ngIf="answers?.length != 0" #countdown [config]="{leftTime: 25}" (event)="onTimerFinished($event)"></countdown>
+<!--  <countdown *ngIf="answers?.length != 0" #countdown [config]="{leftTime: 25}" (event)="onTimerFinished($event)"></countdown>-->
   <h4>{{ question.question }}</h4>
   <div *ngFor="let answer of answers">
     <button type="button" (click)="updateData(answer)"
-      class="btn btn-outline-success btn-sm btn-block mt-3">{{ answer.answer }}</button>
+      class="btn btn-outline-success btn-sm btn-block mt-3 answer">{{ answer.answer }}</button>
   </div>
   <div *ngIf="answers?.length == 0">
-    <button type="button" (click)="finishGame()" class="btn btn btn-outline-warning btn-lg btn-block">Results</button>
+    <button type="button" (click)="finishGame()" class="btn btn btn-outline-warning btn-lg btn-block results">Results</button>
   </div>
 </div>

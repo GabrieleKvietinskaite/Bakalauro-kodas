@@ -168,7 +168,6 @@ class ResultsAPIView(generics.GenericAPIView):
             for question in questions:
                 question_data = Question.objects.filter(scenario_id=data.scenario_id, id=question)
                 answer_data = Answer.objects.filter(scenario_id=data.scenario_id, question_id=question)
-                #weights = bay(list(answer_data.values_list('p_answer', flat=True)), list(answer_data.values_list('p_question_answer', flat=True)), list(question_data.values_list('p_question', flat=True)))
                 answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
                 availability.append(question_data.values_list('availability', flat=True)[0])
                 business.append(question_data.values_list('business', flat=True)[0])
@@ -197,7 +196,7 @@ class ResultsAPIView(generics.GenericAPIView):
             htmap = getHeatmap(answers, answers_n)
             
             info = []
-            info.append(Player.objects.filter(id=data.player_id).values_list('first_name', flat=True)[0] + ' ' + Player.objects.filter(id=data.player_id).values_list('last_name', flat=True)[0])
+            info.append(Player.objects.filter(id=data.player_id).values_list('username', flat=True)[0])
             info.append(Scenario.objects.filter(id=data.scenario_id).values_list('title', flat=True)[0])
             info.append(data.scenario.level.level)
             if data.level_before is None:
@@ -234,6 +233,6 @@ class ResultsAPIView(generics.GenericAPIView):
 
             content = { 'report': report_g}
 
-            return FileResponse(report_g, as_attachment=True, filename='hello.pdf')
+            return FileResponse(report_g, as_attachment=True, filename='report.pdf')
         else:
             return Response({'results': 'game over'}, status=status.HTTP_200_OK)

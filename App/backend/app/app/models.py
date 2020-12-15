@@ -18,7 +18,7 @@ class Role_level(models.Model):
 class Player(AbstractUser):
     competences = models.CharField(max_length = 100)
     roles = models.CharField(max_length = 100)
-    level = models.ForeignKey(Role_level, related_name='player', on_delete=models.CASCADE)
+    level = models.ForeignKey(Role_level, related_name='players', on_delete=models.CASCADE, null=True)
 
 class Scenario(models.Model):
     title = models.CharField(max_length = 100)

@@ -52,16 +52,16 @@ export class ResultComponent implements AfterViewInit{
   constructor(private gameService: GameService,
       private router: Router,
       private sanitizer: DomSanitizer) {
-          /*
+          
           const state = this.router.getCurrentNavigation().extras.state as {GameId: number, ScenarioId: number};
           if(state === undefined){
               this.router.navigate(['scenarios']);
           }
-          this.gameId = this.gameId
-          this.scenarioId = this.scenarioId;
-          */
-          this.gameId = 45;
-          this.scenarioId = 1;
+          this.gameId = state.GameId;
+          this.scenarioId = state.ScenarioId;
+          
+          //this.gameId = 45;
+          //this.scenarioId = 1;
           this.getReport();
           //this.getResults(this.gameId);
           //this.getGraphs();
@@ -71,33 +71,9 @@ export class ResultComponent implements AfterViewInit{
 
   }
 
-  getGraphs(){
-    this.gameService.getGraphs(this.gameId).subscribe(
-      data => {
-        this.graphs = data;
-      }
-    );
-  }
-
   transform(graph: string){
     return this.sanitizer.bypassSecurityTrustResourceUrl(this.base64Image + graph);
 }
-
-  getResults(gameId: number){
-    let receivedPoints;
-    let maxPoints;
-    let categories;
-
-    this.gameService.getResults(this.gameId).subscribe(
-        results => {
-          receivedPoints = results.received_points.split(';').map(Number);
-          maxPoints = results.maximum_points.split(';').map(Number);
-          categories = Array(maxPoints.length).fill(null).map((_, i) => (i+1).toString());
-        },
-        error => this.error = <any>error,
-        () => this.load(receivedPoints, maxPoints, categories)
-    )
-  }
 
   getReport(){
     this.gameService.getReport(this.gameId).subscribe(
@@ -107,82 +83,13 @@ export class ResultComponent implements AfterViewInit{
     )
   }
 
-  public load(receivedPoints: number[], maxPoints: number[], categories: string[]){
-        this.chartOptions = {
-          series: [
-            {
-              name: "Received points",
-              data: receivedPoints,
-            },
-            {
-              name: "Maximum available points",
-              data: maxPoints
-            }
-          ],
-          chart: {
-            height: 350,
-            type: "line"
-          },
-          dataLabels: {
-            enabled: false
-          },
-          stroke: {
-            width: 5,
-            curve: "straight",
-            dashArray: [8, 0]
-          },
-          title: {
-            text: "Game statistics",
-            align: "left"
-          },
-          legend: {
-            tooltipHoverFormatter: function(val, opts) {
-              return (
-                val +
-                " - <strong>" +
-                opts.w.globals.series[opts.seriesIndex][opts.dataPointIndex] +
-                "</strong>"
-              );
-            }
-          },
-          markers: {
-            size: 0,
-            hover: {
-              sizeOffset: 6
-            }
-          },
-          xaxis: {
-            labels: {
-              trim: false
-            },
-            categories: categories
-          },
-          yaxis: {
-            min: -1,
-            max: 4,
-            tickAmount: 5
-          },
-          tooltip: {
-            y: [
-              {
-                title: {
-                  formatter: function(val) {
-                    return val + " per question";
-                  }
-                }
-              },
-              {
-                title: {
-                  formatter: function(val) {
-                    return val + " per question";
-                  }
-                }
-              },
-            ]
-          },
-          grid: {
-            borderColor: "#f1f1f1"
-          }
-      };
+  download(){
+    const link = document.createElement('a');
+    link.setAttribute('target', '_blank');
+    link.setAttribute('href', this.pdfSrc);
+    link.setAttribute('download', `${this.gameId}report.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
   }
 }

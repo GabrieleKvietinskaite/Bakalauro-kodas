@@ -216,7 +216,7 @@ def getHeatmap(answers_data, answers_n):
 
     for i in range(len(answers_data)):
         for j in range(len(answers_data[i])):
-            arr[len(answers_data)-1-j][i] = answers_data[i][j]
+            arr[len(arr)-1-j][i] = answers_data[i][j]
 
     data = arr
 
@@ -224,9 +224,9 @@ def getHeatmap(answers_data, answers_n):
 
     im, cbar = heatmap(data, answers_numbers, questions, ax=ax,
                     cmap="YlGn", cbarlabel="Answers frequency per question")
-
+    
     for x in range(0, len(answers_n)):
-        plt.scatter(x, len(answers_n)-answers_n[x], s=1000, color="none", edgecolor='#cf7879') 
+        plt.scatter(x, len(data)-answers_n[x], s=1000, color="none", edgecolor='#cf7879')
         
 
     valfmt=matplotlib.ticker.FuncFormatter(func)
@@ -296,9 +296,9 @@ def calculateSum(data):
     return round(sum, 5)
 
 def split_to_float_array(data, split_by):
-    print(data)
-    print("-----------------")
-    return [float(x) for x in data.split(split_by)]
+    if len(data) > 0:
+        return [float(x) for x in data.split(split_by)]
+    return [0]
 
 def bay(p_a_arr, p_q_a_arr, p_q):
     data = []

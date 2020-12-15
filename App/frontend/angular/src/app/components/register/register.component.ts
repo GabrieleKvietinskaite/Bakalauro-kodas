@@ -15,7 +15,6 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   loading = false;
   submitted = false;
-  //returnUrl: string;
   error = '';
 
   constructor(
@@ -23,11 +22,7 @@ export class RegisterComponent implements OnInit {
       private route: ActivatedRoute,
       private router: Router,
       private authenticationService: AuthenticationService
-  ) {
-      //if(this.authenticationService.tokenValue) {
-      //    this.router.navigate(['/']);
-      //}
-  }
+  ) { }
 
   ngOnInit() {
       this.registerForm = this.formBuilder.group({
@@ -39,9 +34,6 @@ export class RegisterComponent implements OnInit {
       {
           validator: MustMatch('password', 'confirmPassword')
       });
-
-      // get return url from route parameters or default to '/'
-      //this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   // convenience getter for easy access to form fields
@@ -68,7 +60,7 @@ export class RegisterComponent implements OnInit {
         .pipe(first())
         .subscribe(
             data => {
-                //this.router.navigate([this.returnUrl]);
+                this.router.navigate(['login']);
             },
             error => {
                 this.error = error;
