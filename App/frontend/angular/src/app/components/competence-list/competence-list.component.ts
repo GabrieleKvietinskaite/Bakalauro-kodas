@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserService } from 'src/app/services/user.service';
 import { ICompetence } from '../../models/ICompetence.interface';
@@ -11,16 +11,18 @@ import { ICompetence } from '../../models/ICompetence.interface';
 })
 export class CompetenceListComponent implements OnInit {
 
+  roleId: number;
   competences: ICompetence[];
   selected: ICompetence [];
 
   constructor(private userService: UserService,
     private router: Router,
     private authentcationService: AuthenticationService) {
-      const state = this.router.getCurrentNavigation().extras.state as {Competences: ICompetence[]};
+      const state = this.router.getCurrentNavigation().extras.state as {RoleId: number, Competences: ICompetence[]};
       if(state === undefined){
           this.router.navigate(['roles']);
       }
+      this.roleId = state.RoleId;
       this.competences = state.Competences;
   }
 
@@ -35,6 +37,7 @@ export class CompetenceListComponent implements OnInit {
     let userCompetences = this.selected.map(x => x.id).sort((a, b) => a - b).toString();
     let playerId = this.authentcationService.getTokenPlayerId();
     this.userService.saveCompetences(playerId, userCompetences).subscribe();
-    this.router.navigate(['scenarios']);
+    const navigationExtras: NavigationExtras = { state: { RoleId: this.roleId } };
+    this.router.navigate(['scenarios'], navigationExtras);
   }
 }

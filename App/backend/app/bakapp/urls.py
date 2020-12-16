@@ -36,7 +36,7 @@ urlpatterns = [
     path(r'api/roles', views.RoleListAPIView.as_view(), name='roles-list'),
 
     # SCENARIO
-    path(r'api/scenarios', views.ScenarioListAPIView.as_view(), name='scenarios-list'),
+    url(r'api/scenarios/(?P<role>[0-9]+)$', views.ScenarioListAPIView.as_view(), name='scenarios-list'),
 
     # PLAYER
     #path(r'api/players', views.PlayerListAPIView.as_view(), name='players-list'),

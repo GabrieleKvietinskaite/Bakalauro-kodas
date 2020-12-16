@@ -40,7 +40,7 @@ class RoleSerializer(serializers.ModelSerializer):
 class ScenarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Scenario
-        fields = ('id', 'title', 'description')
+        fields = ('id', 'title', 'description', 'level')
 
 class QuestionSerializer(serializers.ModelSerializer):
     scenario_id = serializers.ReadOnlyField()

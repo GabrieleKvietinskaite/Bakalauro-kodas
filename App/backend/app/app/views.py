@@ -30,8 +30,13 @@ class RoleListAPIView(generics.ListCreateAPIView):
     serializer_class = RoleSerializer
 
 class ScenarioListAPIView(generics.ListCreateAPIView):
-    queryset = Scenario.objects.all()
+    queryset = Scenario.objects.filter()
     serializer_class = ScenarioSerializer
+
+    def get_queryset(self):
+        role = self.kwargs.get('role')
+        
+        return Scenario.objects.filter(id=role) 
 
 class QuestionListAPIView(generics.ListCreateAPIView):
     queryset = Question.objects.all()
@@ -148,27 +153,27 @@ class ResultsAPIView(generics.GenericAPIView):
         defence = []
         reports = []
         other = []
-        answers_n = []
+        answers_numbers = []
 
         game_id = kwargs.get('pk')
-        query = Game.objects.filter(id=game_id)
-        data = Game.objects.get(id=game_id)
-        level = Role_level.objects.get(id=data.scenario.level.id)
+        game_query = Game.objects.filter(id=game_id)
+        game = Game.objects.get(id=game_id)
+        level = Role_level.objects.get(id=game.scenario.level.id)
 
-        received_points = split_to_float_array(data.received_points, ';')
-        maximum_points = split_to_float_array(data.maximum_points, ';')
+        received_points = split_to_float_array(game.received_points, ';')
+        maximum_points = split_to_float_array(game.maximum_points, ';')
         
         if received_points[-1] != 0:
-            questions = [int(x) for x in data.questions.split(';')]
+            questions = [int(x) for x in game.questions.split(';')]
             for x in range(1, len(questions)):
-                answers_n.append((Answer.objects.filter(scenario_id=data.scenario_id, next_question_id=questions[x]).values_list('number', flat=True)[0]))
+                answers_numbers.append((Answer.objects.filter(scenario_id=game.scenario_id, next_question_id=questions[x]).values_list('number', flat=True)[0]))
 
             del questions[-1]
             test = []
             for question in questions:
-                question_data = Question.objects.filter(scenario_id=data.scenario_id, id=question)
-                answer_data = Answer.objects.filter(scenario_id=data.scenario_id, question_id=question)
-                answers.append(Answer.objects.filter(scenario_id=data.scenario_id, question_id=question).values_list('times_chosen', flat=True))
+                question_data = Question.objects.filter(scenario_id=game.scenario_id, id=question)
+                answer_data = Answer.objects.filter(scenario_id=game.scenario_id, question_id=question)
+                answers.append(Answer.objects.filter(scenario_id=game.scenario_id, question_id=question).values_list('times_chosen', flat=True))
                 availability.append(question_data.values_list('availability', flat=True)[0])
                 business.append(question_data.values_list('business', flat=True)[0])
                 defence.append(question_data.values_list('defence', flat=True)[0])
@@ -177,9 +182,10 @@ class ResultsAPIView(generics.GenericAPIView):
 
             passed = calculateLevelPass(received_points, level)
             if passed == 'passed':
-                query.update(level_after=level.id)
+                game_query.update(level_after=level.id)
                 players = Player.objects.filter(level=level)
                 test = Game.objects.filter(player__in=players).values_list('received_points', flat=True)
+                game = Game.objects.get(id=game_id)
 
             test_ = []
             for x in test:
@@ -190,25 +196,31 @@ class ResultsAPIView(generics.GenericAPIView):
             for x in test_:
                 summed_hyp.append(calculateSum(x))
 
-            #query.update(results=calculateResults(availability, business, defence, reports, other))
+            #game_query.update(results=calculateResults(availability, business, defence, reports, other))
             normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(received_points))
             heatmap = best_road(maximum_points, received_points)
-            htmap = getHeatmap(answers, answers_n)
+            htmap = getHeatmap(answers, answers_numbers)
             
             info = []
-            info.append(Player.objects.filter(id=data.player_id).values_list('username', flat=True)[0])
-            info.append(Scenario.objects.filter(id=data.scenario_id).values_list('title', flat=True)[0])
-            info.append(data.scenario.level.level)
-            if data.level_before is None:
-                info.append(data.level_before)
+            info.append(Player.objects.filter(id=game.player_id).values_list('username', flat=True)[0])
+            info.append(Scenario.objects.filter(id=game.scenario_id).values_list('title', flat=True)[0])
+            info.append(game.scenario.level.level)
+            if game.level_before is None:
+                info.append(game.level_before)
+                print('before no')
             else:
-                 info.append(data.level_before.level)
-            if data.level_after is None:
-                info.append(data.level_after)
+                 info.append(game.level_before.level)
+                 print('before yes')
+            if game.level_after is None:
+                info.append(game.level_after)
+                print('after no')
             else:
-                info.append(data.level_after.level)
-            info.append(str(data.started_at).split('.')[0])
-            info.append(str(data.finished_at).split('.')[0])
+                info.append(game.level_after.level)
+                Player.objects.filter(id=game.player_id).update(level=game.level_after)
+                print('after yes')
+
+            info.append(str(game.started_at).split('.')[0])
+            info.append(str(game.finished_at).split('.')[0])
 
             bar_plot_labels = []
             bar_plot_data = []
@@ -229,7 +241,7 @@ class ResultsAPIView(generics.GenericAPIView):
 
             report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data), htmap, arr)
 
-            #query.update(report=report_g)
+            #game_query.update(report=report_g)
 
             content = { 'report': report_g}
 

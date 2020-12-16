@@ -24,6 +24,7 @@ class Scenario(models.Model):
     title = models.CharField(max_length = 100)
     description = models.CharField(max_length = 500)
     level = models.ForeignKey(Role_level, related_name='scenarios', on_delete=models.CASCADE)
+    role = models.ForeignKey(Role, related_name='role_scenarios', on_delete=models.CASCADE)
 
 class Question(models.Model):
     scenario = models.ForeignKey(Scenario, related_name='questions', on_delete=models.CASCADE)

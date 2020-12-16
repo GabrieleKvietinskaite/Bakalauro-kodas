@@ -1,13 +1,16 @@
 <div class="scenarios">
-    <div *ngFor="let scenario of scenarios">
-      <div class="card text-center mt-3">
-        <div class="card-header">
-          {{ scenario.title }}
-        </div>
-        <div class="card-body">
-          <p class="card-text">{{ scenario.description }}</p>
-          <button type="button" (click)="openGame(scenario.id)" class="btn btn-outline-success play">PLAY</button>
-        </div>
+  <div *ngFor="let scenario of scenarios">
+    <div class="card text-center mt-3">
+      <div class="card-header">
+        {{ scenario.title }}
+      </div>
+      <div class="card-body">
+        <p class="card-text">{{ scenario.description }}</p>
+        <button type="button" (click)="openGame(scenario.id)" class="btn btn-outline-success play">PLAY</button>
       </div>
     </div>
   </div>
+</div>
+<div *ngIf="scenarios?.length == 0">
+  <button type="button" (click)="no()" class="btn btn btn-outline-warning btn-lg btn-block">There is no scenarios for your role</button>
+</div>

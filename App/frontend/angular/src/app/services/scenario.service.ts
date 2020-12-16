@@ -18,8 +18,8 @@ export class ScenarioService {
       };
     }
 
-    getScenarios() {
-      return this.httpClient.get(this.REST_API_SERVICE + '/scenarios');
+    getScenarios(roleId: number) {
+      return this.httpClient.get(this.REST_API_SERVICE + `/scenarios/${roleId}`);
     }
 
     private handleError(error: HttpResponse<Error>) {

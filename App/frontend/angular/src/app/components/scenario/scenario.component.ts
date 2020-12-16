@@ -15,13 +15,19 @@ export class ScenarioComponent implements OnInit {
   scenarios: IScenario[];
   error: string;
   playerId: number;
+  roleId: number;
 
   constructor(private scenarioService: ScenarioService,
       private gameService: GameService,
       private authenticationService: AuthenticationService,
-      private router: Router,
+      private router: Router
   ) {
     this.playerId = this.authenticationService.getTokenPlayerId();
+    const state = this.router.getCurrentNavigation().extras.state as {RoleId: number};
+      if(state === undefined){
+          this.router.navigate(['roles']);
+      }
+      this.roleId = state.RoleId;
   }
   scenariosData: Observable<any>;
 
@@ -30,7 +36,7 @@ export class ScenarioComponent implements OnInit {
   }
 
   loadData() {
-    this.scenarioService.getScenarios().subscribe((data: IScenario[]) =>{
+    this.scenarioService.getScenarios(this.roleId).subscribe((data: IScenario[]) =>{
       this.scenarios = data;
     })
   }
@@ -49,5 +55,9 @@ export class ScenarioComponent implements OnInit {
               this.router.navigate(['game'], navigationExtras);
           }
       )
+  }
+
+  no(){
+    this.router.navigate(['roles']);
   }
 }
