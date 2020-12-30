@@ -71,4 +71,8 @@ export class AuthenticationService {
   getTokenPlayerId() {
     return jwt_decode(this.tokenValue).user_id;
   }
+
+  getTokenPlayerUsername() {
+    return jwt_decode(this.tokenValue).username;
+  }
 }

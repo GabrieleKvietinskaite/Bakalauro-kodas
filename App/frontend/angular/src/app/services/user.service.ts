@@ -19,6 +19,10 @@ export class UserService {
     };
   }
 
+  public getUser(userId: number){
+    return this.httpClient.get(this.REST_API_SERVICE + `/player/${userId}`);
+  }
+
   public getCompetences(){
     return this.httpClient.get(this.REST_API_SERVICE + '/competences');
   }

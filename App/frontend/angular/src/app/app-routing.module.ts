@@ -7,17 +7,18 @@ import { RegisterComponent } from './components/register/register.component';
 import { ResultComponent } from './components/result/result.component';
 import { RoleListComponent } from './components/role-list/role-list.component';
 import { ScenarioComponent } from './components/scenario/scenario.component';
+import { UserInformationComponent } from './components/user-information/user-information.component';
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'home', component: UserInformationComponent, canActivate: [AuthGuard] },
   { path: 'competences', component: CompetenceListComponent, canActivate: [AuthGuard] },
   { path: 'roles', component: RoleListComponent, canActivate: [AuthGuard] },
   { path: 'scenarios', component: ScenarioComponent, canActivate: [AuthGuard] },
   { path: 'game', component:GameComponent, canActivate: [AuthGuard] },
   { path: 'result', component:ResultComponent, canActivate: [AuthGuard] }
-
 ];
 
 @NgModule({

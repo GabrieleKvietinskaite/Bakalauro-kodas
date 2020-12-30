@@ -25,7 +25,7 @@ export class ScenarioComponent implements OnInit {
     this.playerId = this.authenticationService.getTokenPlayerId();
     const state = this.router.getCurrentNavigation().extras.state as {RoleId: number};
       if(state === undefined){
-          this.router.navigate(['roles']);
+          this.router.navigate(['home']);
       }
       this.roleId = state.RoleId;
   }

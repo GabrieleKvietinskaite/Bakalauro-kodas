@@ -13,29 +13,37 @@ class Role_levelSerializer(serializers.ModelSerializer):
         model = Role_level
         fields = ('id', 'level', 'points_from', 'points_to')
 
-class PlayerSerializer(UserDetailsSerializer):
-    class Meta:
-        model = Player
-        fields = ('id', 'competences', 'roles',)
-        extra_kwargs = {
-            'competences': {
-                # Tell DRF that the link field is not required.
-                'required': False,
-                'allow_blank': True,
-            },
-            'roles': {
-                # Tell DRF that the link field is not required.
-                'required': False,
-                'allow_blank': True,
-            }
-        }
-
 class RoleSerializer(serializers.ModelSerializer):
     competences = CompetenceSerializer(many=True, read_only=True)
 
     class Meta:
         model = Role
         fields = ('id', 'role', 'description', 'competences')
+
+class RoleWCSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Role
+        fields = ('id', 'role', 'description')
+
+class PlayerSerializer(UserDetailsSerializer):
+    role = RoleWCSerializer()
+    level = Role_levelSerializer()
+
+    class Meta:
+        model = Player
+        fields = ('id', 'competences', 'role', 'level')
+        extra_kwargs = {
+            'competences': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            },
+            'role': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+                'allow_blank': True,
+            }
+        }
 
 class ScenarioSerializer(serializers.ModelSerializer):
     class Meta:

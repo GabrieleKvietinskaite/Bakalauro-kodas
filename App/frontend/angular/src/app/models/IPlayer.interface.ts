@@ -1,6 +1,9 @@
+import { ILevel } from "./ILevel.interface";
+import { IRole } from "./IRole.interface";
+
 export interface IPlayer {
     id: number;
     competences: string;
-    roles: string;
-    level: number;
+    role: IRole;
+    level: ILevel;
   }

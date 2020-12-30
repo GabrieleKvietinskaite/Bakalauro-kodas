@@ -18,6 +18,7 @@ import { ResultComponent } from './components/result/result.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { CountdownModule } from 'ngx-countdown';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
+import { UserInformationComponent } from './components/user-information/user-information.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { PdfViewerModule } from 'ng2-pdf-viewer';
     RegisterComponent,
     ScenarioComponent,
     GameComponent,
-    ResultComponent
+    ResultComponent,
+    UserInformationComponent
   ],
   imports: [
     BrowserModule,

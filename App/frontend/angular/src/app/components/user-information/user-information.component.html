@@ -1,0 +1,20 @@
+<div *ngIf="roleInfo">
+    <div class="userinfo">
+        <div class="card text-center mt-3">
+            <div class="card-header">
+                {{ username }}
+            </div>
+        <div class="card-body">
+            <p class="card-text">Role: {{ roleInfo.role }}</p>
+            <div *ngFor="let competence of competencesInfo">
+                <p class="card-text">Competence: {{ competence.competence }}</p>
+              </div>
+            <p class="card-text">Level: {{ user.level.level }}</p>
+            </div>
+        </div>
+    </div>
+    <button type="button" (click)="chooseScenario()" class="btn btn btn-outline-info btn-lg btn-block">Choose scenario</button>
+</div>
+<div *ngIf="!roleInfo">
+    <button type="button" (click)="chooseRole()" class="btn btn btn-outline-warning btn-lg btn-block">Choose role and competences</button>
+</div>
