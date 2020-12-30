@@ -39,23 +39,19 @@ urlpatterns = [
     url(r'api/scenarios/(?P<role>[0-9]+)$', views.ScenarioListAPIView.as_view(), name='scenarios-list'),
 
     # PLAYER
-    #path(r'api/players', views.PlayerListAPIView.as_view(), name='players-list'),
     url(r'api/player/(?P<pk>[0-9]+)$', views.PlayerAPIView.as_view()),
 
     # QUESTION
-    #path(r'api/questions', views.QuestionListAPIView.as_view(), name='questions-list'),
     url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)$', views.QuestionAPIView.as_view()),
-    url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)/update$', views.QuestionAPIView.as_view()),
 
     # ANSWER
-    url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)/answer/(?P<answer>[0-9]+)$', views.AnswerAPIView.as_view()),
     url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)/answers$', views.AnswerListAPIView.as_view(), name='answers-list'),
     url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)/answer/(?P<answer>[0-9]+)/update$', views.AnswerQuantityAPIView.as_view()),
     
     # GAME
     path(r'api/games', views.GameListAPIView.as_view(), name='games-list'),
-    url(r'api/game/create/player/(?P<player>[0-9]+)/scenario/(?P<scenario>[0-9]+)$', views.CreateGameAPIView.as_view()),
+    url(r'api/game/player/(?P<player>[0-9]+)/scenario/(?P<scenario>[0-9]+)/create$', views.CreateGameAPIView.as_view()),
     url(r'api/game/(?P<pk>[0-9]+)/(?P<slug>[\w-]+)$', views.GameAPIView.as_view()),
-    url(r'api/game/(?P<pk>[0-9]+)/$', views.GameAPIView.as_view()),
-    url(r'api/results/game/(?P<pk>[0-9]+)$', views.ResultsAPIView.as_view()),
+    url(r'api/game/(?P<pk>[0-9]+)$', views.GameAPIView.as_view()),
+    url(r'api/game/(?P<pk>[0-9]+)/results$', views.ResultsAPIView.as_view()),
 ]

@@ -20,7 +20,7 @@ export class GameService {
   }
 
     createGame(playerId: number, scenarioId: number) {
-        let url = `/game/create/player/${playerId}/scenario/${scenarioId}`;
+        let url = `/game/player/${playerId}/scenario/${scenarioId}/create`;
         let form = {"player_id": playerId, "scenario_id": scenarioId}
 
         return this.httpClient.post(this.REST_API_SERVICE + url, form);
@@ -59,7 +59,7 @@ export class GameService {
     }
 
     getReport(gameId: number){
-      var url = `/results/game/${gameId}`;
+      var url = `/game/${gameId}/results`;
 
       return this.httpClient.get(this.REST_API_SERVICE + url, { responseType: 'blob' });
     }
