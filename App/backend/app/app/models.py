@@ -33,6 +33,7 @@ class Question(models.Model):
     times_showed = models.IntegerField()
     times_lost = models.IntegerField()
     p_question = models.DecimalField(max_digits=3, decimal_places=2)
+    competence = models.ForeignKey(Competence, related_name='questions', on_delete=models.CASCADE, null=True)
     availability = models.IntegerField()
     defence = models.IntegerField()
     reports = models.IntegerField()
@@ -48,8 +49,8 @@ class Answer(models.Model):
     times_chosen = models.IntegerField()
     p_answer = models.DecimalField(max_digits=3, decimal_places=2)
     p_question_answer = models.DecimalField(max_digits=3, decimal_places=2)
+    is_competence_achieved = models.BooleanField(null=True)
 
-    
 class Game(models.Model):
     player = models.ForeignKey(Player, related_name='games', on_delete=models.CASCADE)
     scenario = models.ForeignKey(Scenario, related_name='games', on_delete=models.CASCADE)

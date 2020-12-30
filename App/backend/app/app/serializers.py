@@ -52,10 +52,11 @@ class ScenarioSerializer(serializers.ModelSerializer):
 
 class QuestionSerializer(serializers.ModelSerializer):
     scenario_id = serializers.ReadOnlyField()
+    competence = CompetenceSerializer()
 
     class Meta:
         model = Question
-        fields = ('id', 'scenario_id', 'question', 'is_winning', 'times_showed', 'times_lost', 'p_question',
+        fields = ('id', 'scenario_id', 'question', 'competence', 'is_winning', 'times_showed', 'times_lost', 'p_question',
         'availability', 'defence', 'reports', 'business', 'other')
         extra_kwargs = {
             'question': {
@@ -72,7 +73,7 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Answer
-        fields = ('id', 'scenario_id', 'question_id', 'number', 'answer', 'next_question_id', 'times_chosen', 'p_answer', 'p_question_answer')
+        fields = ('id', 'scenario_id', 'question_id', 'number', 'answer', 'next_question_id', 'times_chosen', 'p_answer', 'p_question_answer', 'is_competence_achieved')
         extra_kwargs = {
             'number': {
                 # Tell DRF that the link field is not required.
@@ -92,6 +93,10 @@ class AnswerSerializer(serializers.ModelSerializer):
                 'required': False,
             },
             'p_question_answer': {
+                # Tell DRF that the link field is not required.
+                'required': False,
+            },
+            'is_commpetence_achieved': {
                 # Tell DRF that the link field is not required.
                 'required': False,
             }
