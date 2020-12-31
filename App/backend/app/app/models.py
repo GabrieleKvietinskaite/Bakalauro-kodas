@@ -59,6 +59,7 @@ class Game(models.Model):
     received_points = models.CharField(max_length = 100)
     level_before = models.ForeignKey(Role_level, related_name='games', on_delete=models.CASCADE, null=True)
     level_after = models.ForeignKey(Role_level, related_name='after_games', on_delete=models.CASCADE, null=True)
+    competences = models.CharField(max_length = 100, null=True) 
     results = models.DecimalField(max_digits=4, decimal_places=2, null=True)
     started_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(null=True)

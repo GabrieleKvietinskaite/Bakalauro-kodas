@@ -113,7 +113,13 @@ class GameAPIView(generics.RetrieveUpdateDestroyAPIView):
         if function == 'update':
             received_points = check(data.received_points, request.data['received_points'])
             maximum_points = check(data.maximum_points, request.data['maximum_points'])
-            update = query.update(questions=questions, received_points=received_points, maximum_points=maximum_points)
+
+            if request.data['competences'] == '':
+                competences = data.competences + request.data['competences']
+            else:
+                competences = check(data.competences, request.data['competences'])
+
+            update = query.update(questions=questions, received_points=received_points, maximum_points=maximum_points, competences=competences)
 
             return Response(update, status=status.HTTP_200_OK)
 

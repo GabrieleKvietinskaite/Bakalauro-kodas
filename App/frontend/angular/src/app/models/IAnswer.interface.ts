@@ -1,3 +1,5 @@
+type Nullable<T> = T | null;
+
 export interface IAnswer {
     id: number;
     scenario_id: number;
@@ -8,4 +10,5 @@ export interface IAnswer {
     times_chosen: number;
     p_answer: number;
     p_question_answer: number;
+    is_competence_achieved: Nullable<boolean>;
 }

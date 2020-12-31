@@ -36,7 +36,7 @@ urlpatterns = [
     path(r'api/roles', views.RoleListAPIView.as_view(), name='roles-list'),
 
     # SCENARIO
-    url(r'api/scenarios/(?P<role>[0-9]+)$', views.ScenarioListAPIView.as_view(), name='scenarios-list'),
+    url(r'api/scenarios/(?P<role>[0-9]+)/(?P<level>[0-9]+)$', views.ScenarioListAPIView.as_view(), name='scenarios-list'),
 
     # PLAYER
     url(r'api/player/(?P<pk>[0-9]+)$', views.PlayerAPIView.as_view()),
@@ -50,8 +50,8 @@ urlpatterns = [
     
     # GAME
     path(r'api/games', views.GameListAPIView.as_view(), name='games-list'),
+    url(r'api/game/(?P<pk>[0-9]+)/results$', views.ResultsAPIView.as_view()),
     url(r'api/game/player/(?P<player>[0-9]+)/scenario/(?P<scenario>[0-9]+)/create$', views.CreateGameAPIView.as_view()),
     url(r'api/game/(?P<pk>[0-9]+)/(?P<slug>[\w-]+)$', views.GameAPIView.as_view()),
     url(r'api/game/(?P<pk>[0-9]+)$', views.GameAPIView.as_view()),
-    url(r'api/game/(?P<pk>[0-9]+)/results$', views.ResultsAPIView.as_view()),
 ]

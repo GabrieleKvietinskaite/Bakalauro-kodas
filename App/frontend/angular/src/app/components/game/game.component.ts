@@ -20,14 +20,7 @@ export class GameComponent implements OnInit {
     error: string;
     scenarioId: number;
     gameId: number;
-    private game: IGame={
-        id: null,
-        player_id: null,
-        scenario_id: null,
-        questions: "",
-        received_points: "",
-        maximum_points: ""
-    };
+    competence;
     @ViewChild('countdown', { static: false }) private counter: CountdownComponent;
 
     constructor(private questionService: QuestionService,
@@ -87,8 +80,15 @@ export class GameComponent implements OnInit {
         let maximumPoints = this.findMaxPoints();
         let hyp = this.calculate(answer.p_question_answer, answer.p_answer);
 
+        if(this.question.competence){
+            this.competence = this.question.competence.id + ':' + answer.is_competence_achieved;
+        }
+        else{
+            this.competence = '';
+        }
+
         this.answerService.updateAnswer(this.scenarioId, this.question.id, answer.number).subscribe();
-        this.gameService.updateGame(this.gameId, this.question.id.toString(), hyp.toString(), maximumPoints.toString(), ).subscribe(
+        this.gameService.updateGame(this.gameId, this.question.id.toString(), hyp.toString(), maximumPoints.toString(), this.competence.toString()).subscribe(
             _ => {},
             error => this.error = <any>error,
             () => {
@@ -128,8 +128,16 @@ export class GameComponent implements OnInit {
 
     gameOver() {
         let maxPoints = this.findMaxPoints();
+        let competence;
 
-        this.gameService.updateGame(this.gameId, this.question.id.toString(), '0', maxPoints.toString()).subscribe(
+        if(this.question.competence){
+            this.competence = this.question.competence.id + ':0';
+        }
+        else{
+            this.competence = '';
+        }
+
+        this.gameService.updateGame(this.gameId, this.question.id.toString(), '0', maxPoints.toString(), competence.toString()).subscribe(
             _ => {},
             error => this.error = <any>error,
             () => {
