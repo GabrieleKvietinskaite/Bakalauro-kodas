@@ -31,9 +31,13 @@ class ScenarioListAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         role = self.kwargs.get('role')
-        
-        return Scenario.objects.filter(id=role) 
+        level = self.kwargs.get('level')
 
+        if level == '0':
+            return Scenario.objects.filter(role_id=role, level_id=1)
+        else:   
+            return Scenario.objects.filter(role_id=role, level_id__lte=level) 
+            
 class QuestionAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer

@@ -16,6 +16,7 @@ export class ScenarioComponent implements OnInit {
   error: string;
   playerId: number;
   roleId: number;
+  levelId: number;
 
   constructor(private scenarioService: ScenarioService,
       private gameService: GameService,
@@ -23,7 +24,7 @@ export class ScenarioComponent implements OnInit {
       private router: Router
   ) {
     this.playerId = this.authenticationService.getTokenPlayerId();
-    const state = this.router.getCurrentNavigation().extras.state as {RoleId: number};
+    const state = this.router.getCurrentNavigation().extras.state as {RoleId: number, LevelId: number};
       if(state === undefined){
           this.router.navigate(['home']);
       }
@@ -36,7 +37,13 @@ export class ScenarioComponent implements OnInit {
   }
 
   loadData() {
-    this.scenarioService.getScenarios(this.roleId).subscribe((data: IScenario[]) =>{
+    let level = 0;
+
+    if(this.levelId){
+      level = this.levelId;
+    }
+
+    this.scenarioService.getScenarios(this.roleId, level).subscribe((data: IScenario[]) =>{
       this.scenarios = data;
     })
   }
