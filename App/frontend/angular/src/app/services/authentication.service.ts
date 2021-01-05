@@ -11,7 +11,7 @@ import jwt_decode from "jwt-decode";
 })
 export class AuthenticationService {
 
-  private AUTH_SERVICE = "http://10.0.0.27/auth";
+  private AUTH_SERVICE = `http://${window.location.host}/auth`;
   private tokenSubject: BehaviorSubject<string>;
   public token: Observable<string>;
 
