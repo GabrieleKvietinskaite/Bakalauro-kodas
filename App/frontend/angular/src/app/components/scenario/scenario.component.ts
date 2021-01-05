@@ -29,6 +29,7 @@ export class ScenarioComponent implements OnInit {
           this.router.navigate(['home']);
       }
       this.roleId = state.RoleId;
+      this.levelId = state.LevelId;
   }
   scenariosData: Observable<any>;
 
@@ -37,13 +38,7 @@ export class ScenarioComponent implements OnInit {
   }
 
   loadData() {
-    let level = 0;
-
-    if(this.levelId){
-      level = this.levelId;
-    }
-
-    this.scenarioService.getScenarios(this.roleId, level).subscribe((data: IScenario[]) =>{
+    this.scenarioService.getScenarios(this.roleId, this.levelId).subscribe((data: IScenario[]) =>{
       this.scenarios = data;
     })
   }

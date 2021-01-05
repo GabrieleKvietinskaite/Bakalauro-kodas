@@ -26,7 +26,7 @@ SECRET_KEY = '!f0*q6(s#g!w191r=lj(+pxap_)7*r!q^dz$0&f1u-c#jl5%e^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.0.27']
 
 
 # Application definition
@@ -147,7 +147,7 @@ REST_FRAMEWORK = {
     #),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
 }

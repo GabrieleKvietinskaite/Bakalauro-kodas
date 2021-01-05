@@ -66,7 +66,13 @@ export class UserInformationComponent implements OnInit {
   }
 
   chooseScenario(){
-    const navigationExtras: NavigationExtras = { state: { RoleId: this.user.role.id, LevelId: this.user.level.id } };
+    let level = 0;
+
+    if(this.user.level){
+      level = this.user.level.id;
+    }
+
+    const navigationExtras: NavigationExtras = { state: { RoleId: this.user.role.id, LevelId: level } };
     this.router.navigate(['scenarios'], navigationExtras);
   }
 }
