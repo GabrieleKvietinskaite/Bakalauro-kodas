@@ -18,6 +18,7 @@ from django.urls import path
 from app import views
 from django.conf.urls import include, url
 from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -54,4 +55,6 @@ urlpatterns = [
     url(r'api/game/player/(?P<player>[0-9]+)/scenario/(?P<scenario>[0-9]+)/create$', views.CreateGameAPIView.as_view()),
     url(r'api/game/(?P<pk>[0-9]+)/(?P<slug>[\w-]+)$', views.GameAPIView.as_view()),
     url(r'api/game/(?P<pk>[0-9]+)$', views.GameAPIView.as_view()),
+
+    url(r'^.*', TemplateView.as_view(template_name="home.html"), name="home")
 ]
