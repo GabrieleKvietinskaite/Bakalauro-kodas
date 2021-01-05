@@ -9,7 +9,7 @@ import { IQuestion } from '../models/iquestion';
 })
 export class QuestionService {
 
-  private REST_API_SERVICE = "http://localhost:8000/api";
+  private REST_API_SERVICE = "http://10.0.0.27/api";
   private httpOptions: any;
 
     constructor(private httpClient: HttpClient) { 

@@ -1,3 +1,5 @@
+import os, tempfile
+os.environ['MPLCONFIGDIR'] = tempfile.mkdtemp()
 import matplotlib
 import matplotlib.pyplot as plt
 import scipy.stats

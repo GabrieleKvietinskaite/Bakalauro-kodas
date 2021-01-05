@@ -9,7 +9,7 @@ import { IScenario } from '../models/IScenario.interface';
 })
 export class ScenarioService {
 
-  private REST_API_SERVICE = "http://localhost:8000/api";
+  private REST_API_SERVICE = "http://10.0.0.27/api";
   private httpOptions: any;
 
     constructor(private httpClient: HttpClient) { 

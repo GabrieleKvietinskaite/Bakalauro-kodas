@@ -9,7 +9,7 @@ import { IRole } from '../models/IRole.interface';
 })
 export class UserService {
 
-  private REST_API_SERVICE = "http://localhost:8000/api";
+  private REST_API_SERVICE = "http://10.0.0.27/api";
  
   private httpOptions: any;
   private errors: any;
