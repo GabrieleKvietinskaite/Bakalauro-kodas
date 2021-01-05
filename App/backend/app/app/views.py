@@ -1,17 +1,12 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Competence, Role_level, Player, Role, Scenario, Question, Answer, Game
-from .serializers import CompetenceSerializer, Role_levelSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
+from .serializers import CompetenceSerializer, Role_levelSerializer, PlayerRSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
 from app.graphs import *
 from app.report import *
+from app.helpers import *
 from django.utils import timezone
 from django.http import FileResponse
-
-def check(databas, request):
-    if not databas:
-        return request
-    else:
-        return databas + ';' + request
 
 class CompetenceListAPIView(generics.ListCreateAPIView):
     queryset = Competence.objects.all()
@@ -19,7 +14,11 @@ class CompetenceListAPIView(generics.ListCreateAPIView):
 
 class PlayerAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Player.objects.all()
-    serializer_class = PlayerSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == 'PUT':
+            return PlayerSerializer
+        return PlayerRSerializer
 
 class RoleListAPIView(generics.ListCreateAPIView):
     queryset = Role.objects.all()
@@ -150,6 +149,7 @@ class ResultsAPIView(generics.GenericAPIView):
         game_query = Game.objects.filter(id=game_id)
         game = Game.objects.get(id=game_id)
         level = Role_level.objects.get(id=game.scenario.level.id)
+        player = Player.objects.filter(id=game.player_id)
 
         received_points = split_to_float_array(game.received_points, ';')
         maximum_points = split_to_float_array(game.maximum_points, ';')
@@ -172,11 +172,12 @@ class ResultsAPIView(generics.GenericAPIView):
                 other.append(question_data.values_list('other', flat=True)[0])
 
             passed = calculateLevelPass(received_points, level)
-            if passed == 'passed':
+            if passed:
                 game_query.update(level_after=level.id)
-                players = Player.objects.filter(level=level)
-                test = Game.objects.filter(player__in=players).values_list('received_points', flat=True)
-                game = Game.objects.get(id=game_id)
+
+            players = Player.objects.filter(level=level)
+            test = Game.objects.filter(player__in=players, id__lte=game_id).values_list('received_points', flat=True)
+            game = Game.objects.get(id=game_id)
 
             test_ = []
             for x in test:
@@ -187,7 +188,7 @@ class ResultsAPIView(generics.GenericAPIView):
             for x in test_:
                 summed_hyp.append(calculateSum(x))
 
-            #game_query.update(results=calculateResults(availability, business, defence, reports, other))
+            game_query.update(results=calculateResults(availability, business, defence, reports, other))
             normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(received_points))
             heatmap = best_road(maximum_points, received_points)
             htmap = getHeatmap(answers, answers_numbers)
@@ -198,17 +199,14 @@ class ResultsAPIView(generics.GenericAPIView):
             info.append(game.scenario.level.level)
             if game.level_before is None:
                 info.append(game.level_before)
-                print('before no')
             else:
                  info.append(game.level_before.level)
-                 print('before yes')
+
             if game.level_after is None:
                 info.append(game.level_after)
-                print('after no')
             else:
                 info.append(game.level_after.level)
-                Player.objects.filter(id=game.player_id).update(level=game.level_after)
-                print('after yes')
+                player.update(level=game.level_after)
 
             info.append(str(game.started_at).split('.')[0])
             info.append(str(game.finished_at).split('.')[0])
@@ -228,14 +226,23 @@ class ResultsAPIView(generics.GenericAPIView):
             arr.append(calculateAverage(reports))
             arr.append(calculateAverage(other))
             arr.append(calculateResults(availability, business, defence, reports, other))
-        
 
-            report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data), htmap, arr)
+            competences_achieved = game.competences.split(';')
+            t = []
 
-            #game_query.update(report=report_g)
+            for competence in competences_achieved:
+                l = competence.split(':')
+                t.append(l)
+
+            ttt = Scenario.objects.filter(id=game.scenario_id).values_list('role_id', flat=True)[0]
+            competences = CompetenceSerializer(Role.objects.get(id=ttt).competences.all(), many=True).data
+
+            player_competences = player.values_list('competences', flat=True)[0].split(',')
+    
+            report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data), htmap, arr, competences, t, player_competences)
 
             content = { 'report': report_g}
 
             return FileResponse(report_g, as_attachment=True, filename='report.pdf')
         else:
-            return Response({'results': 'game over'}, status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_204_NO_CONTENT)

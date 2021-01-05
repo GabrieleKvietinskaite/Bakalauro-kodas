@@ -128,7 +128,6 @@ export class GameComponent implements OnInit {
 
     gameOver() {
         let maxPoints = this.findMaxPoints();
-        let competence;
 
         if(this.question.competence){
             this.competence = this.question.competence.id + ':0';
@@ -137,7 +136,7 @@ export class GameComponent implements OnInit {
             this.competence = '';
         }
 
-        this.gameService.updateGame(this.gameId, this.question.id.toString(), '0', maxPoints.toString(), competence.toString()).subscribe(
+        this.gameService.updateGame(this.gameId, this.question.id.toString(), '0', maxPoints.toString(), this.competence.toString()).subscribe(
             _ => {},
             error => this.error = <any>error,
             () => {

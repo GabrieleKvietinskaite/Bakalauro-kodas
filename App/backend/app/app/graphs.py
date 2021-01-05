@@ -4,6 +4,7 @@ import scipy.stats
 import numpy as np
 import io
 import urllib, base64
+from app.helpers import *
 
 matplotlib.use('Agg')
 
@@ -267,47 +268,12 @@ def getAvailability(availability_data):
 
     return buf
 
-def calculateAverage(data):
-    sum = calculateSum(data)
-
-    return int(sum/len(data))
-
-def calculateResults(availability_data, business_data, defence_data, reports_data, other_data):
-    return (calculateAverage(availability_data) * 0.45 +
-        calculateAverage(business_data) * 0.2 +
-        calculateAverage(defence_data) * 0.2 +
-        calculateAverage(reports_data) * 0.1 +
-        calculateAverage(other_data) * 0.05)
-
-def calculateLevelPass(hypothesis_data, level):
-    hyp_sum = calculateSum(hypothesis_data)
-    
-    if hyp_sum > level.points_to/2:
-        return 'passed'
-    else:
-        return 'failed'
-
-def calculateSum(data):
-    sum = 0
-
-    for x in data:
-        sum += x
-
-    return round(sum, 5)
-
-def split_to_float_array(data, split_by):
-    if len(data) > 0:
-        return [float(x) for x in data.split(split_by)]
-    return [0]
-
 def bay(p_a_arr, p_q_a_arr, p_q):
     data = []
     
     for x in range(0, len(p_a_arr)):
         l = round((p_q_a_arr[x] * p_a_arr[x]) / p_q[0], 5)
         data.append(l)
-        #print(str(p_q_a_arr[x]) + '*' + str(p_a_arr[x]) + '/' + str(p_q[0]))
-        #print(l)
 
     return data
 

@@ -31,7 +31,7 @@ export class AuthenticationService {
         if(jwtToken) {
           jwtToken = jwtToken.token;
           localStorage.setItem('Token', JSON.stringify(jwtToken));
-          this.tokenSubject.next(JSON.stringify(jwtToken));
+          this.tokenSubject.next(jwtToken);
         }
         
         return jwtToken;

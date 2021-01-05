@@ -33,7 +33,7 @@ class Automatization:
         password_input.send_keys(self.password)
         confirm_password_input.send_keys(self.password)
         register_button.click()
-        time.sleep(2)
+        time.sleep(3)
 
     def login(self):
         username_input = self.driver.find_element_by_xpath('//input[@formcontrolname="username"]')
@@ -43,7 +43,7 @@ class Automatization:
         username_input.send_keys(self.username)
         password_input.send_keys(self.password)
         login_button.click()
-        time.sleep(2)
+        time.sleep(3)
 
     def choose_role(self):
         self.driver.get('http://localhost:4200/roles')
@@ -56,6 +56,8 @@ class Automatization:
 
         save_role_button = self.driver.find_element_by_class_name('save-role')
         save_role_button.click()
+
+        time.sleep(3)
 
     def choose_competences(self):
         competences_dropdown = self.driver.find_element_by_xpath('//ng-select[@bindLabel="competence"]')
@@ -109,5 +111,5 @@ aut.choose_role()
 aut.choose_competences()
 aut.choose_game()
 aut.game()
-aut.download_report()
-aut.driver.quit()
+#aut.download_report()
+#aut.driver.quit()

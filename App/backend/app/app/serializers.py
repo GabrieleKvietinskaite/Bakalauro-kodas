@@ -25,10 +25,15 @@ class RoleWCSerializer(serializers.ModelSerializer):
         model = Role
         fields = ('id', 'role', 'description')
 
-class PlayerSerializer(UserDetailsSerializer):
-    role = RoleWCSerializer()
-    level = Role_levelSerializer()
+class PlayerRSerializer(UserDetailsSerializer):
+    role = RoleWCSerializer(required=False)
+    level = Role_levelSerializer(required=False)
 
+    class Meta:
+        model = Player
+        fields = ('id', 'competences', 'role', 'level')
+
+class PlayerSerializer(UserDetailsSerializer):
     class Meta:
         model = Player
         fields = ('id', 'competences', 'role', 'level')
@@ -41,7 +46,10 @@ class PlayerSerializer(UserDetailsSerializer):
             'role': {
                 # Tell DRF that the link field is not required.
                 'required': False,
-                'allow_blank': True,
+            },
+            'level': {
+                # Tell DRF that the link field is not required.
+                'required': False,
             }
         }
 
@@ -57,7 +65,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
         fields = ('id', 'scenario_id', 'question', 'competence', 'is_winning', 'times_showed', 'times_lost', 'p_question',
-        'availability', 'defence', 'reports', 'business', 'other')
+        'availability', 'defence', 'reports', 'business', 'other', 'time')
         extra_kwargs = {
             'question': {
                 # Tell DRF that the link field is not required.
@@ -106,7 +114,7 @@ class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'player_id', 'scenario_id', 'questions', 'received_points', 'maximum_points', 
-        'level_before', 'level_after', 'competences', 'report', 'started_at', 'finished_at')
+        'level_before', 'level_after', 'competences', 'started_at', 'finished_at')
         extra_kwargs = {
             'questions': {
                 # Tell DRF that the link field is not required.
@@ -136,10 +144,6 @@ class GameSerializer(serializers.ModelSerializer):
                 'required': False,
             },
             'results': {
-                # Tell DRF that the link field is not required.
-                'required': False,
-            },
-            'report': {
                 # Tell DRF that the link field is not required.
                 'required': False,
             },

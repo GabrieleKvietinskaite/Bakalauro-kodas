@@ -11,4 +11,5 @@ export interface IQuestion {
     times_showed: number;
     times_lost: number;
     p_question: number;
+    time: number;
 }

@@ -27,9 +27,9 @@ export class UserInformationComponent implements OnInit {
       this.playerId = this.authenticationService.getTokenPlayerId();
       this.username = this.authenticationService.getTokenPlayerUsername();  
       this.state = this.router.getCurrentNavigation().extras.state as {Role: IRole, Competences: ICompetence[]};
-     }
+    }
 
-  ngOnInit() {
+  ngOnInit(){
     this.getUserData();
   }
 
@@ -60,8 +60,6 @@ export class UserInformationComponent implements OnInit {
       }
     );
   }
-
-
 
   chooseRole(){
     this.router.navigate(['roles']);

@@ -39,6 +39,7 @@ class Question(models.Model):
     reports = models.IntegerField()
     business = models.IntegerField()
     other = models.IntegerField()
+    time = models.IntegerField(null=True)
 
 class Answer(models.Model):
     scenario = models.ForeignKey(Scenario, related_name='answers', on_delete=models.CASCADE)
@@ -63,5 +64,4 @@ class Game(models.Model):
     results = models.DecimalField(max_digits=4, decimal_places=2, null=True)
     started_at = models.DateTimeField(auto_now_add=True)
     finished_at = models.DateTimeField(null=True)
-    report = models.FileField(null=True)
   

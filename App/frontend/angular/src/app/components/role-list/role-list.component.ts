@@ -27,9 +27,9 @@ export class RoleListComponent implements OnInit {
 
   saveRoles(){
     //let userRoles = this.selected.map(x => x.id).toString();
-    let userRoles = this.selected.id.toString();
+    let userRole = this.selected.id;
     let playerId = this.authentcationService.getTokenPlayerId();
-    this.userService.saveRoles(playerId, userRoles).subscribe();
+    this.userService.saveRoles(playerId, userRole).subscribe();
     const navigationExtras: NavigationExtras = { state: { Role: this.selected, Competences: this.selected.competences } };
     this.router.navigate(['competences'], navigationExtras);
   }

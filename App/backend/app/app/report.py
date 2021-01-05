@@ -48,7 +48,7 @@ def draw_image(image, height, width):
 
     return I
 
-def generate_report(info, normal_distribution_graph, services_availability_graph, best_path, bar_plot, htmap, scoring):
+def generate_report(info, normal_distribution_graph, services_availability_graph, best_path, bar_plot, htmap, scoring, competences, game_competences, player_competences):
     stream = io.BytesIO()
     doc = SimpleDocTemplate(stream,pagesize=A4)
     story.append(Paragraph('REPORT', center_style))
@@ -65,6 +65,34 @@ def generate_report(info, normal_distribution_graph, services_availability_graph
         story.append(Paragraph(x, left_style))
 
     story.append(Paragraph('', formula_style))
+
+    competences_data= [['COMPETENCE', 'DESCRIPTION', 'CHECKED', 'CHOSEN', 'ACHIEVED']]
+
+    for c in competences:
+        checked = False
+        achieved = False
+        for x in game_competences:
+            if str(c['id']) in x:
+                checked = True
+                if x[1] == 'true':
+                    achieved = True
+
+        competences_data.append([Paragraph(c['competence'], styles['Normal']), 
+                                Paragraph(c['description'], styles['Normal']),
+                                Paragraph(str(checked), styles['Normal']), 
+                                Paragraph(str(str(c['id']) in player_competences), styles['Normal']),
+                                Paragraph(str(achieved), styles['Normal'])])
+
+    t=Table(competences_data, colWidths=(None, 6*cm, None, None, None))
+    t.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN', (0, 0), (-1, -1), "CENTER")
+                       ]))
+
+    story.append(t)
+
+    story.append(Paragraph('', formula_style))
+
 
     data1= [['CATEGORY', 'SCORE', 'WEIGHT'],
     ['AVAILABILITY (A)', scoring[0], '45%'],

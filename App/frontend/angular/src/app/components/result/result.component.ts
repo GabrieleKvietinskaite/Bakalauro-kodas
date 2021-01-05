@@ -1,35 +1,8 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { GameService } from 'src/app/services/game.service';
-import {
-    ApexAxisChartSeries,
-    ApexTitleSubtitle,
-    ApexDataLabels,
-    ApexChart,
-    ChartComponent,
-    ApexXAxis,
-    ApexStroke,
-    ApexMarkers,
-    ApexYAxis,
-    ApexGrid,
-    ApexLegend
-  } from "ng-apexcharts";
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IGraphs } from 'src/app/models/IGraphs.interface';
-
-export type ChartOptions = {
-    series: ApexAxisChartSeries;
-    chart: ApexChart;
-    xaxis: ApexXAxis;
-    stroke: ApexStroke;
-    dataLabels: ApexDataLabels;
-    markers: ApexMarkers;
-    tooltip: any; // ApexTooltip;
-    yaxis: ApexYAxis;
-    grid: ApexGrid;
-    legend: ApexLegend;
-    title: ApexTitleSubtitle;
-};
 
 declare var window: any;
 
@@ -39,8 +12,6 @@ declare var window: any;
   styleUrls: ['./result.component.css']
 })
 export class ResultComponent implements AfterViewInit{
-  @ViewChild("chart", {static: false}) chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
   
   error: string;
   gameId: number;
@@ -48,6 +19,8 @@ export class ResultComponent implements AfterViewInit{
   graphs: IGraphs;
   base64Image: string = 'data:image/png;base64,';
   pdfSrc;
+  loading = true;
+  check;
 
   constructor(private gameService: GameService,
       private router: Router,
@@ -59,12 +32,7 @@ export class ResultComponent implements AfterViewInit{
           }
           this.gameId = state.GameId;
           this.scenarioId = state.ScenarioId;
-          
-          //this.gameId = 45;
-          //this.scenarioId = 1;
           this.getReport();
-          //this.getResults(this.gameId);
-          //this.getGraphs();
   }
 
   ngAfterViewInit(){
@@ -77,8 +45,17 @@ export class ResultComponent implements AfterViewInit{
 
   getReport(){
     this.gameService.getReport(this.gameId).subscribe(
-      report => {
-        this.pdfSrc = window.URL.createObjectURL(report);
+      report => { 
+        this.check = report;  
+        this.loading = false;
+        if(report){
+          this.pdfSrc = window.URL.createObjectURL(report);
+        }
+        else{
+          setTimeout(() => {
+            this.router.navigate(['home']);
+          }, 5000);
+        }
       }
     )
   }

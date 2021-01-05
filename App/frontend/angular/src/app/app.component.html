@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand navbar-dark bg-dark">
     <div class="navbar-nav">
-        <a class="nav-item nav-link">AA</a>
+        <a *ngIf="token" class="nav-item nav-link" (click)="home()">Home</a>
+        <a *ngIf="!token" class="nav-item nav-link" (click)="register()">Register</a>
+        <a *ngIf="!token" class="nav-item nav-link" (click)="login()">Login</a>
         <a *ngIf="token" class="nav-item nav-link" (click)="logout()">Logout</a>
     </div>
 </nav>

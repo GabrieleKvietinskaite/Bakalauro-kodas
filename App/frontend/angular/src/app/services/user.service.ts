@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import { throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
+import { IRole } from '../models/IRole.interface';
  
 @Injectable({
   providedIn: 'root'
@@ -37,8 +38,8 @@ export class UserService {
     return this.httpClient.get(this.REST_API_SERVICE + '/roles');
   }
 
-  public saveRoles(userId: number, roles: string){
-    let form = {"roles": roles};
+  public saveRoles(userId: number, role: number){
+    let form = {"role": role};
 
     return this.httpClient.put(this.REST_API_SERVICE + `/player/${userId}`, form, this.httpOptions);
   }

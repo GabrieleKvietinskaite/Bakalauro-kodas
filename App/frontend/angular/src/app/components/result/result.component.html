@@ -3,4 +3,14 @@
 [show-borders]="true"
 style="display: block;"
 ></pdf-viewer>
-<button type="button" (click)="download()" class="btn btn btn-outline-warning btn-lg btn-block download">Download</button>
+<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+<div *ngIf="!check && !loading">
+    <div class="alert alert-danger" role="alert">
+        Time is up! Try again!
+    </div>
+</div>
+<div *ngIf="check">
+    <button type="button" (click)="download()" class="btn btn btn-outline-warning btn-lg btn-block download">
+        Download
+    </button>
+</div>

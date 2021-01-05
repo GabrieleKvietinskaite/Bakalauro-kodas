@@ -22,4 +22,16 @@ export class AppComponent {
       this.authenticationService.logout();
       this.router.navigate(['/']);
   }
+
+  home(){
+    this.router.navigate(['home'])
+  }
+
+  register(){
+    this.router.navigate(['register'])
+  }
+
+  login(){
+    this.router.navigate(['login'])
+  }
 }
