@@ -3,14 +3,19 @@
 [show-borders]="true"
 style="display: block;"
 ></pdf-viewer>
-<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-<div *ngIf="!check && !loading">
+<div *ngIf="loading">
+    <h1>Your report is generating!</h1>
+</div>
+<div *ngIf="loading" class="progress">
+    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+</div>
+    <div *ngIf="!check && !loading">
     <div class="alert alert-danger" role="alert">
         Time is up! Try again!
     </div>
 </div>
 <div *ngIf="check">
-    <button type="button" (click)="download()" class="btn btn btn-outline-warning btn-lg btn-block download">
+    <button type="button" (click)="download()" class="btn btn btn-outline-info btn-lg btn-block download">
         Download
     </button>
 </div>

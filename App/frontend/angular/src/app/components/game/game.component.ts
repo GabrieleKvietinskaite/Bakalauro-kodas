@@ -21,6 +21,7 @@ export class GameComponent implements OnInit {
     scenarioId: number;
     gameId: number;
     competence;
+    loading = true;
     @ViewChild('countdown', { static: false }) private counter: CountdownComponent;
 
     constructor(private questionService: QuestionService,
@@ -48,6 +49,7 @@ export class GameComponent implements OnInit {
         this.questionService.getQuestion(this.scenarioId, questionId).subscribe((data: IQuestion) =>{
             this.question = data;
             this.loadAnswers(questionId)
+            this.loading = false;
         })
     }
 
@@ -93,6 +95,7 @@ export class GameComponent implements OnInit {
             error => this.error = <any>error,
             () => {
                 this.answers = [];
+                this.loading = true;
                 this.loadQuestion(answer.next_question_id);
             }
         );
