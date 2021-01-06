@@ -28,7 +28,7 @@ export class RegisterComponent implements OnInit {
       this.registerForm = this.formBuilder.group({
           username: ['', [ Validators.required, Validators.minLength(2), Validators.maxLength(20) ]],
           email: ['', [ Validators.required, Validators.email ]],
-          password: ['', [ Validators.required, Validators.minLength(6), Validators.maxLength(16) ]],
+          password: ['', [ Validators.required, Validators.minLength(8), Validators.maxLength(16) ]],
           confirmPassword: ['', Validators.required]
       },
       {
@@ -63,8 +63,20 @@ export class RegisterComponent implements OnInit {
                 this.router.navigate(['login']);
             },
             error => {
-                this.error = error;
-                this.loading = false;
+              this.error = error;
+              this.loading = false;
+              if(error.error.username){
+                this.error = error.error.username[0]
+              }
+              else if(error.error.email){
+                this.error = error.error.email[0]
+              }
+              else if(error.error.password1){
+                this.error = error.error.password1[0]
+              }
+              else if(error.error.password2){
+                this.error = error.error.password2[0]
+              }
             }
         );
   }

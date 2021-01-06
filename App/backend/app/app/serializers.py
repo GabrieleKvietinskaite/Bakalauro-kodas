@@ -158,3 +158,10 @@ class GameSerializer(serializers.ModelSerializer):
                 'allow_null': True,
             }
         }
+
+class PlayerGamesSerializer(serializers.ModelSerializer):
+    scenario = ScenarioSerializer(read_only=True)
+
+    class Meta:
+        model = Game
+        fields = ('id', 'scenario', 'finished_at')

@@ -42,6 +42,8 @@ urlpatterns = [
     # PLAYER
     url(r'api/player/(?P<pk>[0-9]+)$', views.PlayerAPIView.as_view()),
 
+    url(r'api/player/(?P<player>[0-9]+)/games$', views.PlayerGamesAPIView.as_view()),
+
     # QUESTION
     url(r'^api/scenario/(?P<scenario>[0-9]+)/question/(?P<question>[0-9]+)$', views.QuestionAPIView.as_view()),
 

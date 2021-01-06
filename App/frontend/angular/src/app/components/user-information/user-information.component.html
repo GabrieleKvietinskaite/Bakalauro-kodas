@@ -28,3 +28,25 @@
     </div>
     <button type="button" (click)="chooseScenario()" class="btn btn btn-outline-info btn-lg btn-block">Choose scenario</button>
 </div>
+<h3>Your games:</h3>
+<div *ngIf="games.length == 0">
+    <h5>You don't have any games played yet.</h5>
+</div>
+<div *ngIf="!reportSuccess">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        Something's wrong! Try again later!
+    </div>
+</div>
+<div *ngIf="games.length != 0">
+    <div class="games overflow-auto row">
+        <div class="games card-group col-sm-3" *ngFor="let game of games">
+            <div class="card text-center text-white bg-secondary mb-1">
+                <div class="card-body">
+                    <h6 class="card-title">{{ game.finished_at |  date:'yyyy-MM-dd' }}</h6>
+                    <p class="card-subtitle mb-2">{{ game.scenario.title }}</p>
+                    <button type="button" (click)="getReport(game.id)" class="btn btn-dark report">REPORT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

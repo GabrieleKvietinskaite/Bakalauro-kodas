@@ -43,4 +43,8 @@ export class UserService {
 
     return this.httpClient.put(this.REST_API_SERVICE + `/player/${userId}`, form, this.httpOptions);
   }
+
+  public getGames(userId: number){
+    return this.httpClient.get(this.REST_API_SERVICE + `/player/${userId}/games`);
+  }
 }

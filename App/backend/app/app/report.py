@@ -48,7 +48,7 @@ def draw_image(image, height, width):
 
     return I
 
-def generate_report(info, normal_distribution_graph, services_availability_graph, best_path, bar_plot, htmap, scoring, competences, game_competences, player_competences):
+def generate_report(info, normal_distribution_graph, services_availability_graph, best_path, bar_plot, htmap, scoring, competences, game_competences, player_competences, received_points_sum):
     stream = io.BytesIO()
     doc = SimpleDocTemplate(stream,pagesize=A4)
     story.append(Paragraph('REPORT', center_style))
@@ -65,6 +65,45 @@ def generate_report(info, normal_distribution_graph, services_availability_graph
         story.append(Paragraph(x, left_style))
 
     story.append(Paragraph('', formula_style))
+
+
+    norm = draw_image(normal_distribution_graph, 10, 14)
+    story.append(norm)
+
+    norm_paragraph = 'This is normal distribution N(μx; σx) graph. This graph shows the distribution of results among players of the same level. The red dot indicates where You are based on your collected points.'
+    story.append(Paragraph(norm_paragraph, left_style))
+
+    story.append(Paragraph('', formula_style))
+
+    points = [['TOTAL RECEIVED POINTS', 'POINTS NEEDED TO ACHIEVE SCENARIO LEVEL'],
+            [received_points_sum, '5']]
+
+    t=Table(points, colWidths=(None, None))
+    t.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
+                       ('BOX', (0,0), (-1,-1), 0.25, colors.black),
+                       ('ALIGN', (0, 0), (-1, -1), "CENTER")
+                       ]))
+
+    story.append(t)
+
+
+    best_path = draw_image(best_path, 10, 14)
+    story.append(best_path)
+
+    best_path_paragraph = 'This is a linear graph showing how many points you got per question (orange line) and what maximum number of points you could score (blue line).'
+    story.append(Paragraph(best_path_paragraph, left_style))
+
+
+    bar_plot = draw_image(bar_plot, 10, 14)
+    story.append(bar_plot)
+
+    bar_plot_paragraph = 'This bar graph shows how many players have reached what level: novice, proficient, advanced, professional or expert.'
+    story.append(Paragraph(bar_plot_paragraph, left_style))
+
+    story.append(Paragraph('', formula_style))
+    story.append(Paragraph('', formula_style))
+    story.append(Paragraph('', formula_style))
+
 
     competences_data= [['COMPETENCE', 'DESCRIPTION', 'CHECKED', 'CHOSEN', 'ACHIEVED']]
 
@@ -100,7 +139,7 @@ def generate_report(info, normal_distribution_graph, services_availability_graph
     ['REPORTS (R)', scoring[2], '20%'],
     ['BUSINESS (B)', scoring[3], '10%'],
     ['OTHER (O)', scoring[4], '5%'],
-    ['TOTAL OF SCORE:', scoring[5], '100%'],]
+    ['TOTAL OF SCORE:', round(scoring[5], 5), '100%'],]
 
     t=Table(data1)
     t.setStyle(TableStyle([('INNERGRID', (0,0), (-1,-1), 0.25, colors.black),
@@ -111,29 +150,12 @@ def generate_report(info, normal_distribution_graph, services_availability_graph
     score_formula = 'SCORE = 45% * A + 20% * D + 20% * R + 10% * B + 5% * O'
     story.append(Paragraph(score_formula, formula_style))
 
-    norm = draw_image(normal_distribution_graph, 10, 14)
-    story.append(norm)
-
-    norm_paragraph = 'This is normal distribution N(μx; σx) graph. This graph shows the distribution of results among players of the same level. The red dot indicates where You are based on your collected points.'
-    story.append(Paragraph(norm_paragraph, left_style))
-
     availability = draw_image(services_availability_graph, 10, 14)
     story.append(availability)
 
     availability_paragraph = 'It is a linear graph showing how the availability of services has changed according to your choices.'
     story.append(Paragraph(availability_paragraph, left_style))
 
-    best_path = draw_image(best_path, 10, 14)
-    story.append(best_path)
-
-    best_path_paragraph = 'This is a linear graph showing how many points you got per question (orange line) and what maximum number of points you could score (blue line).'
-    story.append(Paragraph(best_path_paragraph, left_style))
-
-    bar_plot = draw_image(bar_plot, 10, 14)
-    story.append(bar_plot)
-
-    bar_plot_paragraph = 'This bar graph shows how many players have reached what level: novice, proficient, advanced, professional or expert.'
-    story.append(Paragraph(bar_plot_paragraph, left_style))
 
     htmap = draw_image(htmap, 10, 14)
     story.append(htmap)

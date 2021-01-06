@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { ICompetence } from 'src/app/models/ICompetence.interface';
 import { IPlayer } from 'src/app/models/IPlayer.interface';
+import { IPlayerGames } from 'src/app/models/IPlayerGames.interface';
 import { IRole } from 'src/app/models/IRole.interface';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { GameService } from 'src/app/services/game.service';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -20,9 +22,12 @@ export class UserInformationComponent implements OnInit {
   competencesInfo: ICompetence[] = [];
   competences: ICompetence[];
   state;
+  games: IPlayerGames[] = [];
+  reportSuccess = true;
 
   constructor(private userService: UserService,
     private authenticationService: AuthenticationService,
+    private gameService: GameService,
     private router: Router) {
       this.playerId = this.authenticationService.getTokenPlayerId();
       this.username = this.authenticationService.getTokenPlayerUsername();  
@@ -57,8 +62,29 @@ export class UserInformationComponent implements OnInit {
           this.roleInfo = this.state.Role;
           this.competencesInfo = this.state.Competences;
         }
+        this.getGames();
       }
     );
+  }
+
+  getGames(){
+    this.userService.getGames(this.user.id).subscribe((data: IPlayerGames[]) =>{
+      this.games = data;
+    })
+  }
+
+  getReport(gameId: number){
+    this.gameService.getReport(gameId).subscribe(
+      report => { 
+        if(report){
+          let url = window.URL.createObjectURL(report);
+          window.open(url);
+        }
+        else{
+          this.reportSuccess = false;
+        }
+      }
+    )
   }
 
   chooseRole(){

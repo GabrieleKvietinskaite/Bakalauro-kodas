@@ -11,6 +11,7 @@ import { UserInformationComponent } from './components/user-information/user-inf
 import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
+  { path: '', component: UserInformationComponent, canActivate: [AuthGuard] },
   { path: 'register', component: RegisterComponent },
   { path: 'login', component: LoginComponent },
   { path: 'home', component: UserInformationComponent, canActivate: [AuthGuard] },
@@ -18,7 +19,8 @@ const routes: Routes = [
   { path: 'roles', component: RoleListComponent, canActivate: [AuthGuard] },
   { path: 'scenarios', component: ScenarioComponent, canActivate: [AuthGuard] },
   { path: 'game', component:GameComponent, canActivate: [AuthGuard] },
-  { path: 'result', component:ResultComponent, canActivate: [AuthGuard] }
+  { path: 'result', component:ResultComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from .models import Competence, Role_level, Player, Role, Scenario, Question, Answer, Game
-from .serializers import CompetenceSerializer, Role_levelSerializer, PlayerRSerializer, PlayerSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
+from .serializers import CompetenceSerializer, Role_levelSerializer, PlayerRSerializer, PlayerSerializer, PlayerGamesSerializer, RoleSerializer, ScenarioSerializer, QuestionSerializer, AnswerSerializer, GameSerializer
 from app.graphs import *
 from app.report import *
 from app.helpers import *
@@ -19,6 +19,15 @@ class PlayerAPIView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method == 'PUT':
             return PlayerSerializer
         return PlayerRSerializer
+
+class PlayerGamesAPIView(generics.ListAPIView):
+    queryset = Game.objects.filter()
+    serializer_class = PlayerGamesSerializer
+
+    def get_queryset(self):
+        player = self.kwargs.get('player')
+  
+        return Game.objects.filter(player_id=player).exclude(finished_at=None).exclude(results=None)
 
 class RoleListAPIView(generics.ListCreateAPIView):
     queryset = Role.objects.all()
@@ -206,7 +215,7 @@ class ResultsAPIView(generics.GenericAPIView):
                 info.append(game.level_after)
             else:
                 info.append(game.level_after.level)
-                player.update(level=game.level_after)
+            player.update(level=game.level_after)
 
             info.append(str(game.started_at).split('.')[0])
             info.append(str(game.finished_at).split('.')[0])
@@ -239,10 +248,12 @@ class ResultsAPIView(generics.GenericAPIView):
 
             player_competences = player.values_list('competences', flat=True)[0].split(',')
     
-            report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data), htmap, arr, competences, t, player_competences)
+            report_g = generate_report(info, normal_distribution, getAvailability(availability), heatmap, bar_plot(bar_plot_labels, bar_plot_data), htmap, arr, competences, t, player_competences, calculateSum(received_points))
 
             content = { 'report': report_g}
 
             return FileResponse(report_g, as_attachment=True, filename='report.pdf')
         else:
+            player.update(level=game.level_after)
+
             return Response(status=status.HTTP_204_NO_CONTENT)

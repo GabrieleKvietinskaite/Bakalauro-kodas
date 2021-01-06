@@ -115,7 +115,7 @@ export class GameComponent implements OnInit {
     }
 
     calculate(p_q_a: number, p_a: number){
-        return Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) * 100000) / 100000;
+        return Math.round((((p_q_a * p_a) / this.question.p_question) + Number.EPSILON) *100 * 100000) / 100000;
     }
     
     finishGame() { 
