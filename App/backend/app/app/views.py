@@ -183,24 +183,6 @@ class ResultsAPIView(generics.GenericAPIView):
             passed = calculateLevelPass(received_points, level)
             if passed:
                 game_query.update(level_after=level.id)
-
-            players = Player.objects.filter(level=level)
-            test = Game.objects.filter(player__in=players, id__lte=game_id).values_list('received_points', flat=True)
-            game = Game.objects.get(id=game_id)
-
-            test_ = []
-            for x in test:
-                test_.append(split_to_float_array(x, ';'))
-            
-            
-            summed_hyp = []
-            for x in test_:
-                summed_hyp.append(calculateSum(x))
-
-            game_query.update(results=calculateResults(availability, business, defence, reports, other))
-            normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(received_points))
-            heatmap = best_road(maximum_points, received_points)
-            htmap = getHeatmap(answers, answers_numbers)
             
             info = []
             info.append(Player.objects.filter(id=game.player_id).values_list('username', flat=True)[0])
@@ -209,13 +191,31 @@ class ResultsAPIView(generics.GenericAPIView):
             if game.level_before is None:
                 info.append(game.level_before)
             else:
-                 info.append(game.level_before.level)
+                info.append(game.level_before.level)
 
             if game.level_after is None:
                 info.append(game.level_after)
+                players = Player.objects.filter(level=game.level_after)
             else:
                 info.append(game.level_after.level)
-            player.update(level=game.level_after)
+                players = Player.objects.filter(level=game.level_after.id)
+            player.update(level_id=game.level_after)
+
+            test = Game.objects.filter(player__in=players, id__lte=game_id).values_list('received_points', flat=True)
+            game = Game.objects.get(id=game_id)
+
+            test_ = []
+            for x in test:
+                test_.append(split_to_float_array(x, ';'))
+
+            summed_hyp = []
+            for x in test_:
+                summed_hyp.append(calculateSum(x))
+
+            game_query.update(results=calculateResults(availability, business, defence, reports, other))
+            normal_distribution = generate_normal_distribution(summed_hyp, calculateSum(received_points))
+            heatmap = best_road(maximum_points, received_points)
+            htmap = getHeatmap(answers, answers_numbers)
 
             info.append(str(game.started_at).split('.')[0])
             info.append(str(game.finished_at).split('.')[0])

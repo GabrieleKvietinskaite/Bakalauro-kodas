@@ -20,7 +20,7 @@ class Automatization:
 
     def register(self):
         self.generate_user_details()
-        self.driver.get('http://localhost:4200/register')
+        self.driver.get('http://localhost:8000/register')
 
         username_input = self.driver.find_element_by_xpath('//input[@formcontrolname="username"]')
         email_input = self.driver.find_element_by_xpath('//input[@formcontrolname="email"]')
@@ -46,13 +46,13 @@ class Automatization:
         time.sleep(3)
 
     def choose_role(self):
-        self.driver.get('http://localhost:4200/roles')
+        self.driver.get('http://localhost:8000/roles')
 
         roles_dropdown = self.driver.find_element_by_xpath('//ng-select[@bindLabel="role"]')
         roles_dropdown.click()
 
         roles = self.driver.find_elements_by_class_name('ng-option')
-        roles[0].click()
+        roles[36].click()
 
         save_role_button = self.driver.find_element_by_class_name('save-role')
         save_role_button.click()
@@ -79,6 +79,10 @@ class Automatization:
 
     def choose_game(self):
         time.sleep(1)
+        scenario = self.driver.find_element_by_class_name('scenario')
+        scenario.click()
+        time.sleep(1)
+
         play_button = self.driver.find_element_by_class_name('play')
 
         play_button.click()
